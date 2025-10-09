@@ -1,0 +1,75 @@
+### Get all products
+GET http://localhost:5000/api/products
+
+###
+
+### Get products sorted by price (descending)
+GET http://localhost:5000/api/products?sortBy=price&sortOrder=desc
+
+###
+
+### Get products sorted by name (ascending)
+GET http://localhost:5000/api/products?sortBy=name&sortOrder=asc
+
+###
+
+### Filter by category
+GET http://localhost:5000/api/products?category=Electronics
+
+###
+
+### Filter by price range
+GET http://localhost:5000/api/products?minPrice=50&maxPrice=500
+
+###
+
+### Search by name
+GET http://localhost:5000/api/products?search=Laptop
+
+###
+
+### Combined filters and sorting
+GET http://localhost:5000/api/products?category=Electronics&sortBy=price&sortOrder=asc&minPrice=20&maxPrice=200
+
+###
+
+### Get product by ID
+GET http://localhost:5000/api/products/1
+
+###
+
+### Get all categories
+GET http://localhost:5000/api/products/categories
+
+###
+
+### Create a new product
+POST http://localhost:5000/api/products
+Content-Type: application/json
+
+{
+  "name": "Gaming Mouse",
+  "category": "Electronics",
+  "price": 59.99,
+  "stock": 30
+}
+
+###
+
+### Update a product
+PUT http://localhost:5000/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Updated Laptop",
+  "category": "Electronics",
+  "price": 1299.99,
+  "stock": 12
+}
+
+###
+
+### Delete a product
+DELETE http://localhost:5000/api/products/1
+
+###

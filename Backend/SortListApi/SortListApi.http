@@ -1,0 +1,6 @@
+@SortListApi_HostAddress = http://localhost:5195
+
+GET {{SortListApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
