@@ -243,6 +243,20 @@ public class TicketsController : ControllerBase
     [SwaggerResponse(404, "Ticket not found")]
     public async Task<ActionResult<TicketDto>> UpdateTicket(int id, [FromBody] UpdateTicketDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            // Log model state errors for debugging
+            var errors = ModelState
+                .Where(kv => kv.Value.Errors.Count > 0)
+                .ToDictionary(
+                    kv => kv.Key,
+                    kv => kv.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            _logger.LogWarning("Invalid UpdateTicketDto for id {Id}: {@Errors}", id, errors);
+            return BadRequest(new { message = "Invalid request payload", errors });
+        }
+
         var ticket = await _context.Tickets
             .Include(t => t.CreatedBy)
             .Include(t => t.AssignedTo)
@@ -441,6 +455,7 @@ public class TicketsController : ControllerBase
 
         Expression<Func<Ticket, object>> sortExpression = sortBy.ToLower() switch
         {
+            "id" => t => t.Id,
             "title" => t => t.Title,
             "status" => t => t.Status,
             "priority" => t => t.Priority,

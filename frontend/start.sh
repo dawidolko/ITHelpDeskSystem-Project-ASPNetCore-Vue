@@ -1,124 +1,75 @@
-#!/bin/bash#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
+# Prosty, odporny skrypt do uruchamiania frontendu (Vite)
+# - sprawdza node/npm
+# - instaluje zależności, jeśli brakuje node_modules
+# - uruchamia `npm run dev` i przekazuje sygnały
 
-
-echo "=================================="# Description: Automated setup and start script for Linux/Mac
-
-echo "🚀 IT Help Desk - Frontend Setup"
-
-echo "=================================="echo "🚀 Starting WorkplayHub Vue TypeScript Project..."
-
-echo ""echo "================================================="
-
-
-
-if ! command -v node &> /dev/null; then# Colors for better output
-
-    echo "❌ Node.js nie jest zainstalowany!"RED='\033[0;31m'
-
-    echo "Zainstaluj: brew install node"GREEN='\033[0;32m'
-
-    exit 1YELLOW='\033[1;33m'
-
-fiBLUE='\033[0;34m'
-
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-if ! command -v npm &> /dev/null; then
-
-    echo "❌ npm nie jest zainstalowany!"# Function to check if Node.js is installed
-
-    exit 1check_node() {
-
-fi    if ! command -v node &> /dev/null; then
-
-        echo -e "${RED}❌ Node.js is not installed!${NC}"
-
-echo "✅ Node.js: $(node --version)"        echo -e "${YELLOW}Please install Node.js from https://nodejs.org/${NC}"
-
-echo "✅ npm: $(npm --version)"        exit 1
-
-echo ""    else
-
-        NODE_VERSION=$(node --version)
-
-if [ ! -d "node_modules" ]; then        echo -e "${GREEN}✅ Node.js found: $NODE_VERSION${NC}"
-
-    echo "📦 Instaluję zależności..."    fi
-
-    npm install}
-
-else
-
-    echo "✅ Zależności już zainstalowane"# Function to check if npm is installed
-
-ficheck_npm() {
-
-    if ! command -v npm &> /dev/null; then
-
-echo ""        echo -e "${RED}❌ npm is not installed!${NC}"
-
-echo "=================================="        exit 1
-
-echo "✅ Frontend gotowy!"    else
-
-echo "=================================="        NPM_VERSION=$(npm --version)
-
-echo ""        echo -e "${GREEN}✅ npm found: v$NPM_VERSION${NC}"
-
-echo "🚀 Uruchamiam dev server..."    fi
-
-echo "📍 Frontend: http://localhost:5173"}
-
-echo ""
-
-echo "⚠️  Upewnij się że backend działa!"# Function to install dependencies
-
-echo ""install_dependencies() {
-
-    echo -e "${BLUE}📦 Installing dependencies...${NC}"
-
-npm run dev    if npm install; then
-
-        echo -e "${GREEN}✅ Dependencies installed successfully!${NC}"
-    else
-        echo -e "${RED}❌ Failed to install dependencies!${NC}"
-        exit 1
-    fi
+check_command() {
+  if ! command -v "$1" &> /dev/null; then
+    echo -e "${RED}❌ '$1' nie jest zainstalowany!${NC}"
+    return 1
+  fi
+  return 0
 }
 
-# Function to start development server
+install_dependencies() {
+  echo -e "${BLUE}📦 Instalowanie zależności (npm install)...${NC}"
+  if npm install; then
+    echo -e "${GREEN}✅ Zależności zainstalowane${NC}"
+  else
+    echo -e "${RED}❌ Błąd podczas instalacji zależności${NC}"
+    exit 1
+  fi
+}
+
 start_dev_server() {
-    echo -e "${BLUE}🔥 Starting development server...${NC}"
-    echo -e "${YELLOW}The application will be available at: http://localhost:5173${NC}"
-    echo -e "${YELLOW}Press Ctrl+C to stop the server${NC}"
-    echo "================================================="
-    npm run dev
+  echo -e "${BLUE}🔥 Uruchamiam serwer deweloperski...${NC}"
+  echo -e "${YELLOW}📍 Frontend: http://localhost:5173${NC}"
+  echo -e "${YELLOW}🔁 Ctrl+C aby zatrzymać${NC}"
+
+  # Używamy exec by process otrzymywał sygnały bezpośrednio
+  exec npm run dev
 }
 
-# Main execution
 main() {
-    echo -e "${BLUE}Checking system requirements...${NC}"
-    check_node
-    check_npm
-    
-    echo ""
-    echo -e "${BLUE}Setting up project...${NC}"
-    
-    # Check if node_modules exists
-    if [ ! -d "node_modules" ]; then
-        install_dependencies
-    else
-        echo -e "${GREEN}✅ Dependencies already installed${NC}"
-        echo -e "${YELLOW}💡 Run 'npm install' manually if you want to update dependencies${NC}"
-    fi
-    
-    echo ""
-    start_dev_server
+  echo "=================================="
+  echo "🚀 IT Help Desk - Frontend Setup"
+  echo "=================================="
+
+  # Wymagane narzędzia
+  if ! check_command node; then
+    echo "   Zainstaluj Node.js: https://nodejs.org/ lub 'brew install node'"
+    exit 1
+  fi
+
+  if ! check_command npm; then
+    echo "   Zainstaluj npm (powinno być z Node.js)"
+    exit 1
+  fi
+
+  echo -e "${GREEN}✅ Node.js: $(node --version)${NC}"
+  echo -e "${GREEN}✅ npm: $(npm --version)${NC}"
+
+  # Instalacja zależności jeśli potrzebne
+  if [ ! -d "node_modules" ]; then
+    install_dependencies
+  else
+    echo -e "${GREEN}✅ Zależności już zainstalowane (node_modules)${NC}"
+  fi
+
+  echo ""
+  start_dev_server
 }
 
-# Handle Ctrl+C gracefully
-trap 'echo -e "\n${YELLOW}👋 Stopping development server... Goodbye!${NC}"; exit 0' SIGINT
+# Obsługa Ctrl+C: przekazujemy sygnał do procesu potomnego za pomocą exec
+trap 'echo -e "\n${YELLOW}👋 Zatrzymuję serwer...${NC}"; exit 0' SIGINT SIGTERM
 
-# Run main function
 main

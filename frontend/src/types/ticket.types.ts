@@ -81,7 +81,7 @@ export interface UpdateTicketRequest {
   status?: TicketStatus;
   priority?: TicketPriority;
   category?: TicketCategory;
-  assignedToId?: number;
+  assignedToId?: number | null;
   resolutionNotes?: string;
 }
 

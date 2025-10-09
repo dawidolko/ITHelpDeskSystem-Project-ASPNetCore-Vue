@@ -55,7 +55,7 @@ const startEdit = () => {
     status: ticket.value.status as TicketStatus,
     priority: ticket.value.priority as TicketPriority,
     category: ticket.value.category as TicketCategory,
-    assignedToId: ticket.value.assignedTo?.id || undefined,
+    assignedToId: ticket.value.assignedTo?.id ?? null,
   };
   isEditing.value = true;
 };
@@ -268,7 +268,7 @@ const goBack = () => {
                   v-else
                   v-model="editForm.assignedToId"
                   class="w-full rounded-lg border border-zinc-700 bg-black px-4 py-2 text-white">
-                  <option :value="undefined">Unassigned</option>
+                  <option :value="null">Unassigned</option>
                   <option
                     v-for="tech in technicians"
                     :key="tech.id"

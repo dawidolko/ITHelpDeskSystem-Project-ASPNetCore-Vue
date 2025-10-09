@@ -1,10 +1,23 @@
 using HelpDeskAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        // Accept enum values as strings from frontend (e.g. "Resolved")
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+// Suppress automatic 400 responses so controllers can return detailed ModelState errors
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HelpDeskContext>(options =>
