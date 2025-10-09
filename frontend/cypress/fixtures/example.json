@@ -1,0 +1,117 @@
+{
+  "battlestation": {
+    "name": "My Ultimate Gaming & Productivity BattleStation",
+    "description": "A comprehensive showcase of my complete gaming and productivity setup featuring high-end components and ergonomic design",
+    "owner": "Your Name",
+    "setup_type": "Gaming & Productivity Hybrid"
+  },
+  "main_pc": {
+    "case": "Phanteks NV7",
+    "cpu": "AMD Ryzen 7 5800X",
+    "gpu": "NVIDIA RTX 3060Ti",
+    "ram": "64GB DDR4 3200MHz Corsair",
+    "storage_primary": "Lexar 890 Pro M.2 NVMe",
+    "storage_secondary": "SSD 512GB",
+    "motherboard": "ASUS Strix ROG B550 White",
+    "cooling": "AORUS 360 AIO Water Cooling",
+    "fans": "9x Phanteks Fans",
+    "psu": "SilentiumPC 700W",
+    "performance_tier": "High-End Gaming"
+  },
+  "laptop": {
+    "model": "MacBook Pro M3",
+    "screen_size": "16 inch",
+    "storage": "512GB",
+    "ram": "18GB",
+    "chip": "Apple M3",
+    "use_case": "Mobile productivity and development"
+  },
+  "peripherals": {
+    "keyboard": {
+      "model": "Razer BlackWidow Pro V4",
+      "type": "Mechanical Gaming Keyboard",
+      "switches": "Razer Green"
+    },
+    "mouse_primary": {
+      "model": "Razer Viper V2 Pro",
+      "type": "Wireless Gaming Mouse",
+      "sensor": "Focus Pro 30K"
+    },
+    "mouse_laptop": {
+      "model": "Logitech MX3",
+      "type": "Productivity Mouse",
+      "connection": "Wireless"
+    },
+    "headset": {
+      "model": "Razer BlackShark V2 Pro",
+      "type": "Wireless Gaming Headset",
+      "features": "THX Spatial Audio"
+    },
+    "mouse_accessories": {
+      "bungee": "Razer Mouse Bungee"
+    }
+  },
+  "monitors": {
+    "primary": {
+      "model": "IIYAMA G-MASTER GB2530HSU",
+      "quantity": 2,
+      "size": "25 inch",
+      "refresh_rate": "75Hz",
+      "resolution": "1920x1080"
+    },
+    "secondary": {
+      "model": "HP 25x",
+      "quantity": 1,
+      "size": "24.5 inch",
+      "refresh_rate": "144Hz",
+      "resolution": "1920x1080",
+      "response_time": "1ms"
+    },
+    "total_monitors": 3,
+    "configuration": "Triple monitor setup"
+  },
+  "audio_equipment": {
+    "speakers": {
+      "model": "EDIFIER R1855DB 2.0",
+      "type": "Active Speakers",
+      "color": "Black",
+      "connectivity": "Bluetooth, RCA, AUX"
+    },
+    "microphone": {
+      "model": "Novox NC1",
+      "type": "USB Condenser Microphone",
+      "use_case": "Streaming and calls"
+    },
+    "headset": {
+      "model": "Razer BlackShark V2 Pro",
+      "type": "Gaming Headset",
+      "connection": "Wireless"
+    }
+  },
+  "furniture": {
+    "desk": {
+      "type": "Custom Standing Desk",
+      "material": "Oak wood top",
+      "height_range": "60cm - 125cm",
+      "features": "Electric height adjustment",
+      "design": "Handcrafted custom design"
+    },
+    "chair": {
+      "type": "Ergonomic Office Chair",
+      "features": "Full ergonomic support",
+      "use_case": "Long gaming and work sessions"
+    }
+  },
+  "room_aesthetics": {
+    "lighting": "RGB LED Setup",
+    "cable_management": "Hidden cable routing",
+    "color_scheme": "Black and white with RGB accents"
+  },
+  "use_cases": [
+    "Gaming",
+    "Software Development",
+    "Content Creation",
+    "Productivity Work",
+    "Streaming"
+  ]
+}
