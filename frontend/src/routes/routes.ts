@@ -15,7 +15,6 @@ const routes = [
         ogTitle: "IT Help Desk | Dashboard",
         ogDescription:
           "Professional ticketing system for managing IT support requests.",
-        ogImage: "/icons/battlestation-icon.png",
       });
     },
   },

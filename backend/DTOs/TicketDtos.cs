@@ -2,7 +2,6 @@ using HelpDeskAPI.Models;
 
 namespace HelpDeskAPI.DTOs;
 
-// Request DTOs
 public class CreateTicketDto
 {
     public required string Title { get; set; }
@@ -23,7 +22,6 @@ public class UpdateTicketDto
     public string? ResolutionNotes { get; set; }
 }
 
-// Response DTOs
 public class TicketDto
 {
     public int Id { get; set; }
@@ -74,7 +72,6 @@ public class CreateCommentDto
     public bool IsInternal { get; set; } = false;
 }
 
-// Pagination
 public class PagedResult<T>
 {
     public List<T> Items { get; set; } = new();
@@ -86,30 +83,21 @@ public class PagedResult<T>
     public bool HasNextPage => PageNumber < TotalPages;
 }
 
-// Query Parameters
 public class TicketQueryParameters
 {
-    // Pagination
     public int Page { get; set; } = 1;
     public int PageSize { get; set; } = 10;
-
-    // Search
     public string? Search { get; set; }
-
-    // Filtering
     public TicketStatus? Status { get; set; }
     public TicketPriority? Priority { get; set; }
     public TicketCategory? Category { get; set; }
     public int? AssignedToId { get; set; }
     public int? CreatedById { get; set; }
     public bool? IsOverdue { get; set; }
-
-    // Sorting
     public string SortBy { get; set; } = "CreatedAt";
-    public string SortOrder { get; set; } = "desc"; // asc or desc
+    public string SortOrder { get; set; } = "desc";
 }
 
-// Statistics DTOs
 public class DashboardStatsDto
 {
     public int TotalTickets { get; set; }

@@ -27,7 +27,6 @@ const handleInput = (event: Event) => {
   localValue.value = target.value;
   emit("update:modelValue", target.value);
 
-  // Debounce search
   clearTimeout(debounceTimeout);
   debounceTimeout = setTimeout(() => {
     emit("search", target.value);

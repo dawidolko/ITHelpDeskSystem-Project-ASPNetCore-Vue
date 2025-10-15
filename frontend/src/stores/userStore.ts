@@ -4,14 +4,12 @@ import type { UserSummary } from "../types/ticket.types";
 import { userService } from "../services/ticketService";
 
 export const useUserStore = defineStore("user", () => {
-  // State
   const currentUser = ref<UserSummary | null>(null);
   const users = ref<UserSummary[]>([]);
   const technicians = ref<UserSummary[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Getters
   const isLoggedIn = computed(() => currentUser.value !== null);
   const isAdmin = computed(() => currentUser.value?.role === "Admin");
   const isTechnician = computed(
@@ -20,7 +18,6 @@ export const useUserStore = defineStore("user", () => {
       currentUser.value?.role === "Admin"
   );
 
-  // Actions
   async function fetchUsers() {
     loading.value = true;
     error.value = null;
@@ -49,7 +46,6 @@ export const useUserStore = defineStore("user", () => {
 
   function setCurrentUser(user: UserSummary) {
     currentUser.value = user;
-    // In production, save to localStorage/session
     localStorage.setItem("currentUser", JSON.stringify(user));
   }
 
@@ -58,7 +54,6 @@ export const useUserStore = defineStore("user", () => {
     if (stored) {
       currentUser.value = JSON.parse(stored);
     } else {
-      // For demo purposes, set a default user
       currentUser.value = {
         id: 1,
         fullName: "Jan Kowalski",

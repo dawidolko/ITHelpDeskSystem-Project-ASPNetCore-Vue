@@ -9,11 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(opts =>
     {
-        // Accept enum values as strings from frontend (e.g. "Resolved")
         opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     });
 
-// Suppress automatic 400 responses so controllers can return detailed ModelState errors
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
@@ -55,7 +53,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Swagger musi być dostępny zawsze, nie tylko w Development
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -63,7 +60,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-// CORS musi być PRZED Authorization i Routing
 app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();

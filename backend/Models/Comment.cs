@@ -11,14 +11,12 @@ public class Comment
     [Required]
     public string Content { get; set; } = string.Empty;
 
-    // Foreign Keys
     [Required]
     public int TicketId { get; set; }
 
     [Required]
     public int AuthorId { get; set; }
 
-    // Navigation Properties
     [ForeignKey("TicketId")]
     public Ticket Ticket { get; set; } = null!;
 
@@ -27,5 +25,5 @@ public class Comment
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public bool IsInternal { get; set; } = false; // Internal notes visible only to technicians
+    public bool IsInternal { get; set; } = false;
 }

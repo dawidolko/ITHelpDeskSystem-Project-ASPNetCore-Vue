@@ -24,13 +24,11 @@ public class Ticket
     [Required]
     public TicketCategory Category { get; set; } = TicketCategory.Other;
 
-    // Foreign Keys
     [Required]
     public int CreatedById { get; set; }
 
     public int? AssignedToId { get; set; }
 
-    // Navigation Properties
     [ForeignKey("CreatedById")]
     public User CreatedBy { get; set; } = null!;
 
@@ -39,19 +37,16 @@ public class Ticket
 
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
-    // Timestamps
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ResolvedAt { get; set; }
     public DateTime? ClosedAt { get; set; }
 
-    // Additional fields
     [StringLength(500)]
     public string? ResolutionNotes { get; set; }
 
     public int ViewCount { get; set; } = 0;
 
-    // Computed properties
     public TimeSpan? TimeToResolve => ResolvedAt.HasValue ? ResolvedAt.Value - CreatedAt : null;
     public bool IsOverdue => Status != TicketStatus.Resolved && Status != TicketStatus.Closed && 
                             CreatedAt.AddHours(GetSLAHours()) < DateTime.UtcNow;

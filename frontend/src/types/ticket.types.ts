@@ -1,4 +1,3 @@
-// Ticket types
 export interface Ticket {
   id: number;
   title: string;
@@ -38,7 +37,6 @@ export interface Comment {
   isInternal: boolean;
 }
 
-// Enums
 export enum TicketStatus {
   New = "New",
   Open = "Open",
@@ -66,7 +64,6 @@ export enum TicketCategory {
   Other = "Other",
 }
 
-// Request DTOs
 export interface CreateTicketRequest {
   title: string;
   description: string;
@@ -91,7 +88,6 @@ export interface CreateCommentRequest {
   isInternal?: boolean;
 }
 
-// Query parameters
 export interface TicketQueryParams {
   page?: number;
   pageSize?: number;
@@ -106,7 +102,6 @@ export interface TicketQueryParams {
   sortOrder?: "asc" | "desc";
 }
 
-// Pagination
 export interface PagedResult<T> {
   items: T[];
   totalCount: number;
@@ -117,7 +112,6 @@ export interface PagedResult<T> {
   hasNextPage: boolean;
 }
 
-// Statistics
 export interface DashboardStats {
   totalTickets: number;
   openTickets: number;

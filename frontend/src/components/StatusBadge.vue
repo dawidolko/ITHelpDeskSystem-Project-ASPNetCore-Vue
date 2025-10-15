@@ -54,7 +54,6 @@ const getColor = (): string => {
 };
 
 const formatLabel = (value: string): string => {
-  // Convert "InProgress" to "In Progress"
   return value.replace(/([A-Z])/g, " $1").trim();
 };
 </script>

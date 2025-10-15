@@ -19,7 +19,6 @@ const route = useRoute();
 const ticketStore = useTicketStore();
 const userStore = useUserStore();
 
-// Filters and sorting
 const searchQuery = ref("");
 const selectedStatus = ref<TicketStatus | "">("");
 const selectedPriority = ref<TicketPriority | "">("");
@@ -40,7 +39,6 @@ onMounted(async () => {
   userStore.loadCurrentUser();
   await userStore.fetchTechnicians();
 
-  // Load filters from route query
   if (route.query.status)
     selectedStatus.value = route.query.status as TicketStatus;
   if (route.query.priority)

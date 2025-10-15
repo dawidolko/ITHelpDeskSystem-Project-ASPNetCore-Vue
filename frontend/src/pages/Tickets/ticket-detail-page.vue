@@ -27,8 +27,6 @@ const technicians = computed(() => userStore.technicians);
 const isEditing = ref(false);
 const newComment = ref("");
 const isInternalComment = ref(false);
-
-// Edit form
 const editForm = ref<UpdateTicketRequest>({});
 
 onMounted(async () => {

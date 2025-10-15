@@ -13,7 +13,6 @@ import type {
 import { ticketService } from "../services/ticketService";
 
 export const useTicketStore = defineStore("ticket", () => {
-  // State
   const tickets = ref<Ticket[]>([]);
   const currentTicket = ref<TicketDetail | null>(null);
   const pagedResult = ref<PagedResult<Ticket> | null>(null);
@@ -21,7 +20,6 @@ export const useTicketStore = defineStore("ticket", () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  // Actions
   async function fetchTickets(params?: TicketQueryParams) {
     loading.value = true;
     error.value = null;
@@ -71,13 +69,11 @@ export const useTicketStore = defineStore("ticket", () => {
     try {
       const updatedTicket = await ticketService.updateTicket(id, data);
 
-      // Update in list
       const index = tickets.value.findIndex((t) => t.id === id);
       if (index !== -1) {
         tickets.value[index] = updatedTicket;
       }
 
-      // Update current ticket if it's the same
       if (currentTicket.value?.id === id) {
         currentTicket.value = { ...currentTicket.value, ...updatedTicket };
       }
@@ -116,7 +112,6 @@ export const useTicketStore = defineStore("ticket", () => {
     try {
       const newComment = await ticketService.addComment(ticketId, data);
 
-      // Add to current ticket if it's loaded
       if (currentTicket.value?.id === ticketId) {
         currentTicket.value.comments.push(newComment);
         currentTicket.value.commentCount++;

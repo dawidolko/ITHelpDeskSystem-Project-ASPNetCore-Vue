@@ -17,7 +17,6 @@ public class HelpDeskContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // User configuration
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -26,12 +25,10 @@ public class HelpDeskContext : DbContext
             entity.Property(e => e.IsActive).HasDefaultValue(true);
         });
 
-        // Ticket configuration
         modelBuilder.Entity<Ticket>(entity =>
         {
             entity.HasKey(e => e.Id);
             
-            // Configure relationships
             entity.HasOne(t => t.CreatedBy)
                 .WithMany(u => u.CreatedTickets)
                 .HasForeignKey(t => t.CreatedById)
@@ -42,7 +39,6 @@ public class HelpDeskContext : DbContext
                 .HasForeignKey(t => t.AssignedToId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Configure indexes for better query performance
             entity.HasIndex(e => e.Status);
             entity.HasIndex(e => e.Priority);
             entity.HasIndex(e => e.Category);
@@ -50,7 +46,6 @@ public class HelpDeskContext : DbContext
             entity.HasIndex(e => e.CreatedById);
             entity.HasIndex(e => e.AssignedToId);
 
-            // Configure enums as strings in database (optional, more readable)
             entity.Property(e => e.Status)
                 .HasConversion<string>();
             entity.Property(e => e.Priority)
@@ -59,7 +54,6 @@ public class HelpDeskContext : DbContext
                 .HasConversion<string>();
         });
 
-        // Comment configuration
         modelBuilder.Entity<Comment>(entity =>
         {
             entity.HasKey(e => e.Id);

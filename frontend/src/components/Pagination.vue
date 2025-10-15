@@ -29,7 +29,6 @@ const pageNumbers = computed(() => {
   let start = Math.max(1, props.currentPage - halfVisible);
   let end = Math.min(props.totalPages, props.currentPage + halfVisible);
 
-  // Adjust if at the beginning or end
   if (props.currentPage <= halfVisible) {
     end = Math.min(maxVisible, props.totalPages);
   } else if (props.currentPage >= props.totalPages - halfVisible) {

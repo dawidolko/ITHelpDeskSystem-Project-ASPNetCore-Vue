@@ -40,7 +40,6 @@ public class TicketsController : ControllerBase
                 .Include(t => t.Comments)
                 .AsQueryable();
 
-            // FILTERING (F)
             if (parameters.Status.HasValue)
             {
                 query = query.Where(t => t.Status == parameters.Status.Value);
@@ -81,7 +80,6 @@ public class TicketsController : ControllerBase
                 );
             }
 
-            // SEARCHING / WYSZUKIWANIE (W)
             if (!string.IsNullOrWhiteSpace(parameters.Search))
             {
                 var searchLower = parameters.Search.ToLower();
@@ -98,14 +96,11 @@ public class TicketsController : ControllerBase
                 );
             }
 
-            // Get total count before pagination
             var totalCount = await query.CountAsync();
 
-            // SORTING (S)
             query = ApplySorting(query, parameters.SortBy, parameters.SortOrder);
 
-            // PAGINATION (P)
-            var pageSize = Math.Max(1, Math.Min(100, parameters.PageSize)); // Limit to 1-100
+            var pageSize = Math.Max(1, Math.Min(100, parameters.PageSize));
             var pageNumber = Math.Max(1, parameters.Page);
             
             var items = await query
@@ -152,7 +147,6 @@ public class TicketsController : ControllerBase
             return NotFound(new { message = $"Ticket with ID {id} not found" });
         }
 
-        // Increment view count
         ticket.ViewCount++;
         await _context.SaveChangesAsync();
 
@@ -204,7 +198,6 @@ public class TicketsController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        // Verify user exists
         var user = await _context.Users.FindAsync(dto.CreatedById);
         if (user == null)
         {
@@ -226,7 +219,6 @@ public class TicketsController : ControllerBase
         _context.Tickets.Add(ticket);
         await _context.SaveChangesAsync();
 
-        // Load navigation properties
         await _context.Entry(ticket).Reference(t => t.CreatedBy).LoadAsync();
 
         var result = MapToTicketDto(ticket);
@@ -245,7 +237,6 @@ public class TicketsController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            // Log model state errors for debugging
             var errors = ModelState
                 .Where(kv => kv.Value.Errors.Count > 0)
                 .ToDictionary(
@@ -268,7 +259,6 @@ public class TicketsController : ControllerBase
             return NotFound(new { message = $"Ticket with ID {id} not found" });
         }
 
-        // Update fields if provided
         if (!string.IsNullOrWhiteSpace(dto.Title))
         {
             ticket.Title = dto.Title;
@@ -283,7 +273,6 @@ public class TicketsController : ControllerBase
         {
             ticket.Status = dto.Status.Value;
 
-            // Set timestamps based on status
             if (dto.Status.Value == TicketStatus.Resolved && !ticket.ResolvedAt.HasValue)
             {
                 ticket.ResolvedAt = DateTime.UtcNow;
@@ -306,15 +295,12 @@ public class TicketsController : ControllerBase
 
         if (dto.AssignedToId.HasValue)
         {
-            // Verify assignee exists
             var assignee = await _context.Users.FindAsync(dto.AssignedToId.Value);
             if (assignee == null)
             {
                 return BadRequest(new { message = "Invalid assignee user ID" });
             }
             ticket.AssignedToId = dto.AssignedToId.Value;
-
-            // Load the assignee
             await _context.Entry(ticket).Reference(t => t.AssignedTo).LoadAsync();
         }
 
@@ -388,7 +374,6 @@ public class TicketsController : ControllerBase
         ticket.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
-        // Load author
         await _context.Entry(comment).Reference(c => c.Author).LoadAsync();
 
         var result = new CommentDto
@@ -448,7 +433,6 @@ public class TicketsController : ControllerBase
         return Ok(stats);
     }
 
-    // Helper methods
     private IQueryable<Ticket> ApplySorting(IQueryable<Ticket> query, string sortBy, string sortOrder)
     {
         var isDescending = sortOrder.ToLower() == "desc";
