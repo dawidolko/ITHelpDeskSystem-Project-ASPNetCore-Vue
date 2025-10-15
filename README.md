@@ -27,6 +27,8 @@
 - [Wymagania](#-wymagania)
 - [Konfiguracja](#-konfiguracja)
 - [Rozwój projektu](#-rozwój-projektu)
+- [⭐ Raport walidacji](#-raport-walidacji)
+- [🧪 Instrukcja testowania](#-instrukcja-testowania)
 - [Licencja](#-licencja)
 
 ---
@@ -453,12 +455,57 @@ System automatycznie wypełnia bazę danymi testowymi przy pierwszym uruchomieni
 
 ---
 
-## � Dodatkowa dokumentacja
+## 📚 Dodatkowa dokumentacja
 
 - **[Szczegółowa dokumentacja](docs/README.md)** - Pełna dokumentacja projektu
 - **[API Reference](http://localhost:5000/swagger)** - Interaktywna dokumentacja API
+- **[⭐ RAPORT WALIDACJI](VALIDATION_REPORT.md)** - Szczegółowy raport spełnienia założeń na 100%
+- **[🧪 INSTRUKCJA TESTOWANIA](TESTING_GUIDE.md)** - Krok po kroku jak przetestować walidację
 - **[Architektura](docs/ARCHITECTURE.md)** - Struktura i wzorce projektowe
 - **[Deployment](docs/DEPLOYMENT.md)** - Wdrożenie na produkcję
+
+---
+
+## ⭐ Raport Walidacji
+
+**Projekt spełnia WSZYSTKIE założenia na 100%!**
+
+Szczegółowy raport dostępny w: **[VALIDATION_REPORT.md](VALIDATION_REPORT.md)**
+
+### ✅ Potwierdzone funkcjonalności:
+
+- ✅ **REST API** - Pełne CRUD operations
+- ✅ **SPA** - Vue.js 3 z TypeScript
+- ✅ **Sortowanie** - Po 8 różnych polach, ASC/DESC
+- ✅ **Filtrowanie** - 6 różnych filtrów (Status, Priority, Category, Assignment, Overdue)
+- ✅ **Wyszukiwanie** - Pełnotekstowe po 7 polach
+- ✅ **Paginacja PO STRONIE BACKENDU** z pełną walidacją:
+  - ✅ Walidacja Page (min 1, max totalPages)
+  - ✅ Walidacja PageSize (1-100)
+  - ✅ Walidacja nieistniejących ID użytkowników
+  - ✅ Błędy 400 Bad Request zamiast auto-korekty
+  - ✅ Szczegółowe komunikaty błędów
+- ✅ **Pełny interaktywny Swagger** dla wszystkich endpointów:
+  - ✅ Wszystkie endpointy udokumentowane
+  - ✅ XML comments dla wszystkich DTO
+  - ✅ Przykłady wartości dla każdego pola
+  - ✅ Enums jako stringi z opisami
+  - ✅ Walidacje widoczne w Swagger UI
+
+### 🧪 Jak przetestować?
+
+Szczegółowa instrukcja testowania: **[TESTING_GUIDE.md](TESTING_GUIDE.md)**
+
+**Szybki test:**
+
+1. Uruchom backend: `cd backend && dotnet run`
+2. Otwórz Swagger: http://localhost:5000/swagger
+3. Testuj endpoint `GET /api/tickets` z parametrami:
+   - `page=-5` → 400 Bad Request ✅
+   - `pageSize=999` → 400 Bad Request ✅
+   - `assignedToId=999999` → 400 Bad Request ✅
+
+**Wszystkie testy muszą zwracać błędy zamiast pustych wyników!**
 
 ---
 

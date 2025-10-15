@@ -1,4 +1,5 @@
 using HelpDeskAPI.Data;
+using HelpDeskAPI.Swagger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -14,7 +15,7 @@ builder.Services.AddControllers()
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
+    options.SuppressModelStateInvalidFilter = false;
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -40,15 +41,40 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "IT Help Desk API",
         Version = "v1",
-        Description = "REST API for IT Help Desk System - Supporting SFWP (Sort, Filter, Search, Pagination)",
+        Description = @"REST API for IT Help Desk System - Supporting SFWP (Sort, Filter, Search, Pagination)
+        
+**Features:**
+- ✅ Full CRUD operations for tickets
+- ✅ Advanced filtering (Status, Priority, Category, Assignment)
+- ✅ Full-text search (Title, Description, User names)
+- ✅ Flexible sorting (Multiple fields, ASC/DESC)
+- ✅ Pagination with validation (1-100 items per page)
+- ✅ Comments system (Public & Internal)
+- ✅ Dashboard statistics
+- ✅ User management
+
+**Validation:**
+- All query parameters are validated
+- Invalid page numbers return 400 Bad Request
+- Invalid user IDs return 400 Bad Request
+- PageSize limited to 1-100 items",
         Contact = new OpenApiContact
         {
-            Name = "Help Desk Team",
-            Email = "support@helpdesk.com"
+            Name = "Dawid Olko",
+            Email = "do125148@stud.ur.edu.pl"
         }
     });
     
     c.EnableAnnotations();
+    
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+    
+    c.SchemaFilter<EnumSchemaFilter>();
 });
 
 var app = builder.Build();

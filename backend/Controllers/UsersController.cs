@@ -20,10 +20,14 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Get all users
+    /// Get all active users in the system
     /// </summary>
+    /// <param name="role">Optional filter by role (Admin, Technician, User)</param>
+    /// <returns>List of users</returns>
     [HttpGet]
-    [SwaggerOperation(Summary = "Get all users", Description = "Retrieve all users in the system")]
+    [SwaggerOperation(
+        Summary = "Get all users", 
+        Description = "Retrieve all active users in the system. Can be filtered by role.")]
     [SwaggerResponse(200, "Success", typeof(List<UserSummaryDto>))]
     public async Task<ActionResult<List<UserSummaryDto>>> GetUsers([FromQuery] string? role = null)
     {
@@ -52,10 +56,13 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Get technicians only
+    /// Get all technicians (users with Technician or Admin role)
     /// </summary>
+    /// <returns>List of technicians</returns>
     [HttpGet("technicians")]
-    [SwaggerOperation(Summary = "Get technicians", Description = "Retrieve all technician users")]
+    [SwaggerOperation(
+        Summary = "Get technicians", 
+        Description = "Retrieve all active users with Technician or Admin role. Used for ticket assignment.")]
     [SwaggerResponse(200, "Success", typeof(List<UserSummaryDto>))]
     public async Task<ActionResult<List<UserSummaryDto>>> GetTechnicians()
     {
@@ -77,10 +84,14 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Get user by ID
+    /// Get specific user by ID
     /// </summary>
+    /// <param name="id">User ID</param>
+    /// <returns>User details</returns>
     [HttpGet("{id}")]
-    [SwaggerOperation(Summary = "Get user by ID", Description = "Retrieve user details")]
+    [SwaggerOperation(
+        Summary = "Get user by ID", 
+        Description = "Retrieve detailed information about a specific user.")]
     [SwaggerResponse(200, "Success", typeof(UserSummaryDto))]
     [SwaggerResponse(404, "User not found")]
     public async Task<ActionResult<UserSummaryDto>> GetUser(int id)

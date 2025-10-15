@@ -30,6 +30,7 @@ public class TicketsController : ControllerBase
         Summary = "Get all tickets with SFWP",
         Description = "Retrieve tickets with support for Sorting, Filtering, Searching (Wyszukiwanie), and Pagination")]
     [SwaggerResponse(200, "Success", typeof(PagedResult<TicketDto>))]
+    [SwaggerResponse(400, "Bad Request - Invalid parameters")]
     public async Task<ActionResult<PagedResult<TicketDto>>> GetTickets([FromQuery] TicketQueryParameters parameters)
     {
         try
@@ -57,11 +58,31 @@ public class TicketsController : ControllerBase
 
             if (parameters.AssignedToId.HasValue)
             {
+                var assigneeExists = await _context.Users.AnyAsync(u => u.Id == parameters.AssignedToId.Value);
+                if (!assigneeExists)
+                {
+                    return BadRequest(new 
+                    { 
+                        message = "Assigned user not found", 
+                        parameter = "AssignedToId", 
+                        value = parameters.AssignedToId.Value 
+                    });
+                }
                 query = query.Where(t => t.AssignedToId == parameters.AssignedToId.Value);
             }
 
             if (parameters.CreatedById.HasValue)
             {
+                var creatorExists = await _context.Users.AnyAsync(u => u.Id == parameters.CreatedById.Value);
+                if (!creatorExists)
+                {
+                    return BadRequest(new 
+                    { 
+                        message = "Creator user not found", 
+                        parameter = "CreatedById", 
+                        value = parameters.CreatedById.Value 
+                    });
+                }
                 query = query.Where(t => t.CreatedById == parameters.CreatedById.Value);
             }
 
@@ -100,8 +121,21 @@ public class TicketsController : ControllerBase
 
             query = ApplySorting(query, parameters.SortBy, parameters.SortOrder);
 
-            var pageSize = Math.Max(1, Math.Min(100, parameters.PageSize));
-            var pageNumber = Math.Max(1, parameters.Page);
+            var pageSize = parameters.PageSize;
+            var pageNumber = parameters.Page;
+            
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            if (pageNumber > totalPages && totalCount > 0)
+            {
+                return BadRequest(new 
+                { 
+                    message = $"Page number {pageNumber} exceeds total pages ({totalPages})", 
+                    parameter = "Page", 
+                    value = pageNumber,
+                    totalPages = totalPages,
+                    totalCount = totalCount
+                });
+            }
             
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
@@ -187,10 +221,14 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Create a new ticket
     /// </summary>
+    /// <param name="dto">Ticket creation data</param>
+    /// <returns>Created ticket</returns>
     [HttpPost]
-    [SwaggerOperation(Summary = "Create new ticket", Description = "Create a new help desk ticket")]
+    [SwaggerOperation(
+        Summary = "Create new ticket", 
+        Description = "Create a new help desk ticket. All fields are validated. CreatedById must exist in the database.")]
     [SwaggerResponse(201, "Ticket created", typeof(TicketDto))]
-    [SwaggerResponse(400, "Invalid request")]
+    [SwaggerResponse(400, "Bad Request - Invalid data or user ID not found")]
     public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] CreateTicketDto dto)
     {
         if (!ModelState.IsValid)
@@ -229,9 +267,13 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Update an existing ticket
     /// </summary>
+    /// <param name="id">Ticket ID</param>
+    /// <param name="dto">Updated ticket data</param>
+    /// <returns>Updated ticket</returns>
     [HttpPut("{id}")]
     [SwaggerOperation(Summary = "Update ticket", Description = "Update ticket properties including status, priority, assignment, etc.")]
     [SwaggerResponse(200, "Ticket updated", typeof(TicketDto))]
+    [SwaggerResponse(400, "Bad Request - Invalid data or user ID")]
     [SwaggerResponse(404, "Ticket not found")]
     public async Task<ActionResult<TicketDto>> UpdateTicket(int id, [FromBody] UpdateTicketDto dto)
     {
@@ -343,9 +385,15 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Add a comment to a ticket
     /// </summary>
+    /// <param name="id">Ticket ID</param>
+    /// <param name="dto">Comment data (content, authorId, isInternal)</param>
+    /// <returns>Created comment</returns>
     [HttpPost("{id}/comments")]
-    [SwaggerOperation(Summary = "Add comment", Description = "Add a new comment to a ticket")]
+    [SwaggerOperation(
+        Summary = "Add comment", 
+        Description = "Add a new comment to a ticket. Comments can be public or internal (visible only to technicians).")]
     [SwaggerResponse(201, "Comment added", typeof(CommentDto))]
+    [SwaggerResponse(400, "Bad Request - Invalid author ID")]
     [SwaggerResponse(404, "Ticket not found")]
     public async Task<ActionResult<CommentDto>> AddComment(int id, [FromBody] CreateCommentDto dto)
     {
