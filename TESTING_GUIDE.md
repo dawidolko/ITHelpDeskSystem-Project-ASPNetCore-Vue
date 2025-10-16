@@ -1,6 +1,6 @@
 # 🧪 INSTRUKCJA TESTOWANIA WALIDACJI
 
-## Jak sprawdzić, że paginacja i walidacja działają poprawnie
+## Jak sprawdzić, że paginacja, walidacja i autentykacja działają poprawnie
 
 ### 1. Uruchom Backend
 
@@ -18,6 +18,29 @@ Now listening on: http://localhost:5000
 ### 2. Otwórz Swagger UI
 
 Wejdź na: **http://localhost:5000/swagger**
+
+### 3. Autoryzacja (WAŻNE!)
+
+Większość endpointów wymaga autoryzacji JWT. Najpierw musisz się zalogować:
+
+1. Rozwiń **`POST /api/auth/login`**
+2. Kliknij **"Try it out"**
+3. W body wpisz:
+
+```json
+{
+  "email": "admin@firma.pl",
+  "password": "Admin123!"
+}
+```
+
+4. Kliknij **"Execute"**
+5. Skopiuj wartość `token` z odpowiedzi
+6. Kliknij przycisk **"Authorize" 🔓** u góry strony
+7. Wpisz: `Bearer TWOJ_TOKEN` (zastąp TWOJ_TOKEN skopiowanym tokenem)
+8. Kliknij **"Authorize"**
+
+Teraz możesz testować chronione endpointy!
 
 ---
 

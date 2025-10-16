@@ -409,13 +409,26 @@ builder.Services.AddSwaggerGen(c =>
 
 **Features:**
 - ✅ Full CRUD operations for tickets
+- ✅ JWT Authentication with role-based access control
 - ✅ Advanced filtering (Status, Priority, Category, Assignment)
 - ✅ Full-text search (Title, Description, User names)
 - ✅ Flexible sorting (Multiple fields, ASC/DESC)
 - ✅ Pagination with validation (1-100 items per page)
 - ✅ Comments system (Public & Internal)
 - ✅ Dashboard statistics
-- ✅ User management
+- ✅ User management (Admin panel)
+
+**Authentication:**
+1. Register at POST /api/auth/register or login at POST /api/auth/login
+2. Copy the token from response
+3. Click 'Authorize' button (🔓) at the top
+4. Enter: Bearer {your_token}
+5. Click 'Authorize'
+
+**Test Accounts:**
+- Admin: admin@firma.pl / Admin123!
+- Technician: tech@firma.pl / Tech123!
+- User: user@firma.pl / User123!
 
 **Validation:**
 - All query parameters are validated

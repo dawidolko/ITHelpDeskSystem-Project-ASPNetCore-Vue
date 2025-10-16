@@ -68,11 +68,17 @@
 - **Dynamiczne sortowanie** - po dowolnym polu (tytuł, status, priorytet, data utworzenia)
 - **Paginacja** - z informacją o liczbie stron i rekordów
 
-### 👥 System Użytkowników
+### 👥 System Użytkowników & Autoryzacja
 
-- **Role użytkowników** - Admin, Technik, Użytkownik
+- **JWT Authentication** - bezpieczne uwierzytelnianie z tokenami (7-dniowa ważność)
+- **Role użytkowników** - User, Technician, Admin z różnymi uprawnieniami
+- **Rejestracja publiczna** - każdy może się zarejestrować jako User
+- **Panel Admina** - zarządzanie użytkownikami i zmiana ról
+- **Role-based access control**:
+  - **User** - widzi tylko swoje zgłoszenia
+  - **Technician** - widzi wszystkie zgłoszenia, może aktualizować przypisane
+  - **Admin** - pełny dostęp, zarządzanie użytkownikami
 - **Departamenty** - przypisanie do działów organizacji
-- **Historia aktywności** - śledzenie utworzonych i przypisanych zgłoszeń
 
 ### 💬 Komentarze
 
@@ -421,37 +427,22 @@ curl -X POST http://localhost:5000/api/tickets \
 
 System automatycznie wypełnia bazę danymi testowymi przy pierwszym uruchomieniu:
 
-- **👥 Użytkownicy:** 50 użytkowników (10 Adminów, 15 Techników, 25 Użytkowników)
-- **🎫 Zgłoszenia:** 125+ zgłoszeń z różnymi statusami, priorytetami i kategoriami
-- **💬 Komentarze:** 50+ komentarzy (publiczne i wewnętrzne)
+- **👥 Użytkownicy:** 18 użytkowników (3 Adminów, 5 Techników, 10 Użytkowników) z zahashowanymi hasłami (BCrypt)
+- **🎫 Zgłoszenia:** 20 zgłoszeń z różnymi statusami, priorytetami i kategoriami
+- **💬 Komentarze:** 15+ komentarzy (publiczne i wewnętrzne)
 
 ### Testowe konta:
 
-| Email                       | Hasło        | Rola    |
-| --------------------------- | ------------ | ------- |
-| jan.kowalski@company.com    | -            | Admin   |
-| anna.nowak@company.com      | -            | Technik |
-| marek.kowalczyk@company.com | - Użytkownik |
+| Email           | Hasło     | Rola       | Dostęp                              |
+| --------------- | --------- | ---------- | ----------------------------------- |
+| admin@firma.pl  | Admin123! | Admin      | Pełny dostęp + zarządzanie          |
+| tech@firma.pl   | Tech123!  | Technician | Wszystkie zgłoszenia, może edytować |
+| user@firma.pl   | User123!  | User       | Tylko własne zgłoszenia             |
+| admin1@firma.pl | Admin123! | Admin      | Konto testowe 2                     |
+| tech1@firma.pl  | Tech123!  | Technician | Konto testowe 2                     |
+| user1@firma.pl  | User123!  | User       | Konto testowe 2                     |
 
----
-
-## 🎨 Zrzuty ekranu
-
-### Dashboard
-
-![Dashboard](docs/screenshots/dashboard.png)
-
-### Lista zgłoszeń z SFWP
-
-![Tickets](docs/screenshots/tickets.png)
-
-### Szczegóły zgłoszenia
-
-![Ticket Detail](docs/screenshots/ticket-detail.png)
-
-### Statystyki
-
-![Statistics](docs/screenshots/statistics.png)
+**Możesz też się zarejestrować!** Każdy nowy użytkownik otrzymuje rolę **User** (Admin może zmienić rolę w panelu zarządzania)
 
 ---
 
@@ -642,16 +633,33 @@ Backend README: **[backend/README.md](backend/README.md)**
 
 ### Backend API Endpoints:
 
+**Auth (Public):**
+
 ```bash
-GET    /api/tickets              # Lista zgłoszeń (SFWP)
+POST   /api/auth/register        # Rejestracja (domyślnie User)
+POST   /api/auth/login           # Logowanie (zwraca JWT token)
+```
+
+**Tickets (Requires Authentication):**
+
+```bash
+GET    /api/tickets              # Lista zgłoszeń (SFWP) - filtrowane wg roli
 GET    /api/tickets/{id}         # Szczegóły zgłoszenia
 POST   /api/tickets              # Nowe zgłoszenie
 PUT    /api/tickets/{id}         # Aktualizacja
-DELETE /api/tickets/{id}         # Usunięcie
+DELETE /api/tickets/{id}         # Usunięcie (tylko Admin)
 POST   /api/tickets/{id}/comments # Dodanie komentarza
 GET    /api/tickets/statistics   # Statystyki
-GET    /api/users                # Użytkownicy
+```
+
+**Users (Requires Authentication):**
+
+```bash
+GET    /api/users                # Użytkownicy (Admin/Technician)
 GET    /api/users/technicians    # Technicy
+GET    /api/users/{id}           # Szczegóły użytkownika
+PUT    /api/users/{id}/role      # Zmiana roli (tylko Admin)
+DELETE /api/users/{id}           # Usunięcie użytkownika (tylko Admin)
 ```
 
 #### Przykłady SFWP:
