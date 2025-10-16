@@ -2,12 +2,46 @@ import DashboardPage from "../pages/Dashboard/dashboard-page.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { useSeoMeta } from "@unhead/vue";
 
+const requireAuth = (_to: any, _from: any, next: any) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    next("/login");
+  } else {
+    next();
+  }
+};
+
 const routes = [
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("../pages/Login/LoginPage.vue"),
+    beforeEnter: () => {
+      useSeoMeta({
+        title: "Login | IT Help Desk",
+        description: "Login to IT Help Desk System",
+        ogTitle: "Login | IT Help Desk",
+      });
+    },
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: () => import("../pages/Register/RegisterPage.vue"),
+    beforeEnter: () => {
+      useSeoMeta({
+        title: "Register | IT Help Desk",
+        description: "Register to IT Help Desk System",
+        ogTitle: "Register | IT Help Desk",
+      });
+    },
+  },
   {
     path: "/",
     name: "Dashboard",
     component: DashboardPage,
-    beforeEnter: () => {
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
       useSeoMeta({
         title: "IT Help Desk | Dashboard",
         description:
@@ -19,10 +53,15 @@ const routes = [
     },
   },
   {
+    path: "/dashboard",
+    redirect: "/",
+  },
+  {
     path: "/tickets",
     name: "Tickets",
     component: () => import("../pages/Tickets/tickets-page.vue"),
-    beforeEnter: () => {
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
       useSeoMeta({
         title: "Tickets | IT Help Desk",
         description:
@@ -37,7 +76,8 @@ const routes = [
     path: "/tickets/:id",
     name: "TicketDetail",
     component: () => import("../pages/Tickets/ticket-detail-page.vue"),
-    beforeEnter: () => {
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
       useSeoMeta({
         title: "Ticket Details | IT Help Desk",
         description:
@@ -50,7 +90,8 @@ const routes = [
     path: "/create-ticket",
     name: "CreateTicket",
     component: () => import("../pages/Tickets/create-ticket-page.vue"),
-    beforeEnter: () => {
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
       useSeoMeta({
         title: "Create Ticket | IT Help Desk",
         description: "Submit a new IT support request or issue.",
@@ -62,12 +103,26 @@ const routes = [
     path: "/statistics",
     name: "Statistics",
     component: () => import("../pages/Statistics/statistics-page.vue"),
-    beforeEnter: () => {
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
       useSeoMeta({
         title: "Statistics | IT Help Desk",
         description:
           "View comprehensive statistics and analytics for IT support tickets.",
         ogTitle: "Statistics | IT Help Desk",
+      });
+    },
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: () => import("../pages/Users/UsersManagementPage.vue"),
+    beforeEnter: (to: any, from: any, next: any) => {
+      requireAuth(to, from, next);
+      useSeoMeta({
+        title: "Users Management | IT Help Desk",
+        description: "Manage users and their roles - Admin only",
+        ogTitle: "Users Management | IT Help Desk",
       });
     },
   },

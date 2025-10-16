@@ -1,13 +1,16 @@
 using HelpDeskAPI.Data;
 using HelpDeskAPI.DTOs;
 using HelpDeskAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq.Expressions;
+using System.Security.Claims;
 
 namespace HelpDeskAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
@@ -22,24 +25,44 @@ public class TicketsController : ControllerBase
         _logger = logger;
     }
 
+    private int GetCurrentUserId()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.Parse(userIdClaim!);
+    }
+
+    private string GetCurrentUserRole()
+    {
+        return User.FindFirst(ClaimTypes.Role)?.Value ?? "User";
+    }
+
     /// <summary>
     /// Get all tickets with full SFWP support (Sort, Filter, Search, Pagination)
     /// </summary>
     [HttpGet]
     [SwaggerOperation(
         Summary = "Get all tickets with SFWP",
-        Description = "Retrieve tickets with support for Sorting, Filtering, Searching (Wyszukiwanie), and Pagination")]
+        Description = "Retrieve tickets with SFWP. User sees only their tickets. Technician and Admin see all.")]
     [SwaggerResponse(200, "Success", typeof(PagedResult<TicketDto>))]
     [SwaggerResponse(400, "Bad Request - Invalid parameters")]
+    [SwaggerResponse(401, "Unauthorized")]
     public async Task<ActionResult<PagedResult<TicketDto>>> GetTickets([FromQuery] TicketQueryParameters parameters)
     {
         try
         {
+            var currentUserId = GetCurrentUserId();
+            var currentUserRole = GetCurrentUserRole();
+
             var query = _context.Tickets
                 .Include(t => t.CreatedBy)
                 .Include(t => t.AssignedTo)
                 .Include(t => t.Comments)
                 .AsQueryable();
+
+            if (currentUserRole == "User")
+            {
+                query = query.Where(t => t.CreatedById == currentUserId);
+            }
 
             if (parameters.Status.HasValue)
             {
@@ -160,15 +183,17 @@ public class TicketsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get a specific ticket by ID
-    /// </summary>
     [HttpGet("{id}")]
     [SwaggerOperation(Summary = "Get ticket by ID", Description = "Retrieve detailed information about a specific ticket including comments")]
     [SwaggerResponse(200, "Success", typeof(TicketDetailDto))]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(403, "Forbidden - User can only view their own tickets")]
     [SwaggerResponse(404, "Ticket not found")]
     public async Task<ActionResult<TicketDetailDto>> GetTicket(int id)
     {
+        var currentUserId = GetCurrentUserId();
+        var currentUserRole = GetCurrentUserRole();
+
         var ticket = await _context.Tickets
             .Include(t => t.CreatedBy)
             .Include(t => t.AssignedTo)
@@ -179,6 +204,11 @@ public class TicketsController : ControllerBase
         if (ticket == null)
         {
             return NotFound(new { message = $"Ticket with ID {id} not found" });
+        }
+
+        if (currentUserRole == "User" && ticket.CreatedById != currentUserId)
+        {
+            return Forbid();
         }
 
         ticket.ViewCount++;
@@ -218,22 +248,27 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>
-    /// Create a new ticket
-    /// </summary>
-    /// <param name="dto">Ticket creation data</param>
-    /// <returns>Created ticket</returns>
     [HttpPost]
     [SwaggerOperation(
         Summary = "Create new ticket", 
-        Description = "Create a new help desk ticket. All fields are validated. CreatedById must exist in the database.")]
+        Description = "Create a new help desk ticket. All fields are validated. User can only create tickets for themselves.")]
     [SwaggerResponse(201, "Ticket created", typeof(TicketDto))]
     [SwaggerResponse(400, "Bad Request - Invalid data or user ID not found")]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(403, "Forbidden - Users can only create tickets for themselves")]
     public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] CreateTicketDto dto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        var currentUserId = GetCurrentUserId();
+        var currentUserRole = GetCurrentUserRole();
+
+        if (currentUserRole == "User" && dto.CreatedById != currentUserId)
+        {
+            return Forbid();
         }
 
         var user = await _context.Users.FindAsync(dto.CreatedById);
@@ -360,9 +395,7 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>
-    /// Delete a ticket
-    /// </summary>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     [SwaggerOperation(Summary = "Delete ticket", Description = "Permanently delete a ticket and all its comments")]
     [SwaggerResponse(204, "Ticket deleted")]

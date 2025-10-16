@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,24 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = false;
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<HelpDeskContext>(options =>
@@ -41,27 +62,48 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "IT Help Desk API",
         Version = "v1",
-        Description = @"REST API for IT Help Desk System - Supporting SFWP (Sort, Filter, Search, Pagination)
-        
-**Features:**
-- ✅ Full CRUD operations for tickets
-- ✅ Advanced filtering (Status, Priority, Category, Assignment)
-- ✅ Full-text search (Title, Description, User names)
-- ✅ Flexible sorting (Multiple fields, ASC/DESC)
-- ✅ Pagination with validation (1-100 items per page)
-- ✅ Comments system (Public & Internal)
-- ✅ Dashboard statistics
-- ✅ User management
+        Description = @"REST API for IT Help Desk System - Supporting SFWP (Sort, Filter, Search, Pagination) + JWT Authentication
 
-**Validation:**
-- All query parameters are validated
-- Invalid page numbers return 400 Bad Request
-- Invalid user IDs return 400 Bad Request
-- PageSize limited to 1-100 items",
+**Authentication:**
+1. Register at POST /api/auth/register or login at POST /api/auth/login
+2. Copy the token from response
+3. Click 'Authorize' button (🔓) at the top
+4. Enter: Bearer {your_token}
+5. Click 'Authorize'
+
+**Test Accounts:**
+- Admin: admin@firma.pl / Admin123!
+- Technician: tech@firma.pl / Tech123!
+- User: user@firma.pl / User123!",
         Contact = new OpenApiContact
         {
             Name = "Dawid Olko",
             Email = "do125148@stud.ur.edu.pl"
+        }
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. Enter your token in the text input below."
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
         }
     });
     
@@ -89,6 +131,7 @@ app.UseSwaggerUI(c =>
 app.UseCors("AllowVueApp");
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

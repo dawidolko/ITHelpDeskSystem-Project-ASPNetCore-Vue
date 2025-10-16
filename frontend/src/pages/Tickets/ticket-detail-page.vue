@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useTicketStore } from "../../stores/ticketStore";
 import { useUserStore } from "../../stores/userStore";
+import { useAuthStore } from "../../stores/authStore";
 import NavigationGlobal from "../../components/navigation-global.vue";
 import FooterGlobal from "../../components/footer-global.vue";
 import StatusBadge from "../../components/StatusBadge.vue";
@@ -17,6 +18,7 @@ const router = useRouter();
 const route = useRoute();
 const ticketStore = useTicketStore();
 const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const ticketId = ref(parseInt(route.params.id as string));
 const ticket = computed(() => ticketStore.currentTicket);
@@ -205,7 +207,7 @@ const goBack = () => {
                   Cancel
                 </button>
                 <button
-                  v-if="!isEditing"
+                  v-if="!isEditing && authStore.isAdmin"
                   @click="deleteTicket"
                   class="rounded-lg border border-red-500 px-6 py-3 font-bold uppercase tracking-wide text-red-500 transition duration-300 hover:bg-red-500 hover:text-white">
                   Delete

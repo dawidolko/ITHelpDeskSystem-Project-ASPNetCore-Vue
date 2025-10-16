@@ -20,6 +20,10 @@ public class User
     [StringLength(200)]
     public string Email { get; set; } = string.Empty;
 
+    [Required]
+    [StringLength(500)]
+    public string PasswordHash { get; set; } = string.Empty;
+
     [StringLength(50)]
     public string? PhoneNumber { get; set; }
 

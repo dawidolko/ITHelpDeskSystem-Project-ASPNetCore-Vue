@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import facebookIcon from "/icons/facebook.svg";
 import instagramIcon from "/icons/instagram.svg";
+import { useAuthStore } from "@/stores/authStore";
+
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -25,26 +28,40 @@ import instagramIcon from "/icons/instagram.svg";
         </router-link>
         <nav
           class="flex flex-col items-center justify-between gap-6 md:flex-row md:items-start md:gap-10">
-          <router-link
-            class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
-            to="/"
-            >Dashboard
-          </router-link>
-          <router-link
-            class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
-            to="/tickets"
-            >Tickets
-          </router-link>
-          <router-link
-            class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
-            to="/create-ticket"
-            >New Ticket
-          </router-link>
-          <router-link
-            class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
-            to="/statistics"
-            >Statistics
-          </router-link>
+          <template v-if="authStore.isAuthenticated">
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/"
+              >Dashboard
+            </router-link>
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/tickets"
+              >Tickets
+            </router-link>
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/create-ticket"
+              >New Ticket
+            </router-link>
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/statistics"
+              >Statistics
+            </router-link>
+          </template>
+          <template v-else>
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/login"
+              >Zaloguj
+            </router-link>
+            <router-link
+              class="font-semibold uppercase tracking-wider text-white transition duration-300 hover:text-k-main"
+              to="/register"
+              >Rejestruj
+            </router-link>
+          </template>
         </nav>
       </div>
       <div
