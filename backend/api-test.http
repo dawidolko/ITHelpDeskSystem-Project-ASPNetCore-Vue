@@ -1,0 +1,160 @@
+### IT Help Desk API - Test Requests
+### Use REST Client extension in VS Code to execute these requests
+
+@baseUrl = http://localhost:5000/api
+@token = 
+
+### ============================================
+### 1. AUTHENTICATION - Login as Admin
+### ============================================
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@firma.pl",
+  "password": "Admin123!"
+}
+
+### Extract token from login response
+# Copy the token value and paste it in @token variable above
+
+### ============================================
+### 2. Login as Technician
+### ============================================
+# @name loginTech
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "tech@firma.pl",
+  "password": "Tech123!"
+}
+
+### ============================================
+### 3. Login as User
+### ============================================
+# @name loginUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@firma.pl",
+  "password": "User123!"
+}
+
+### ============================================
+### 4. GET ALL TICKETS - NO FILTERS (requires authentication)
+### ============================================
+GET {{baseUrl}}/Tickets
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 5. GET TICKETS - ONLY PAGINATION
+### ============================================
+GET {{baseUrl}}/Tickets?Page=1&PageSize=20
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 6. GET TICKETS - SEARCH ONLY
+### ============================================
+GET {{baseUrl}}/Tickets?Search=problem
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 7. GET TICKETS - FILTER BY STATUS
+### ============================================
+GET {{baseUrl}}/Tickets?Status=Open
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 8. GET TICKETS - FILTER BY PRIORITY
+### ============================================
+GET {{baseUrl}}/Tickets?Priority=High
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 9. GET TICKETS - COMBINED FILTERS (less restrictive)
+### ============================================
+GET {{baseUrl}}/Tickets?Page=1&PageSize=10&Status=Open&SortBy=createdAt&SortOrder=desc
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 10. GET TICKET BY ID
+### ============================================
+GET {{baseUrl}}/Tickets/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 11. CREATE NEW TICKET
+### ============================================
+POST {{baseUrl}}/Tickets
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Test Ticket from REST Client",
+  "description": "Testing API directly from VS Code",
+  "priority": "Medium",
+  "category": "Software",
+  "createdById": 1
+}
+
+### ============================================
+### 12. UPDATE TICKET
+### ============================================
+PUT {{baseUrl}}/Tickets/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Updated Ticket Title",
+  "status": "InProgress",
+  "priority": "High"
+}
+
+### ============================================
+### 13. ADD COMMENT TO TICKET
+### ============================================
+POST {{baseUrl}}/Tickets/1/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "content": "This is a test comment from REST Client",
+  "authorId": 1,
+  "isInternal": false
+}
+
+### ============================================
+### 14. GET ALL USERS
+### ============================================
+GET {{baseUrl}}/Users
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 15. GET DASHBOARD STATISTICS
+### ============================================
+GET {{baseUrl}}/Tickets/stats
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### NOTES:
+### ============================================
+# 1. First execute a login request (#1, #2, or #3)
+# 2. Copy the "token" value from the response
+# 3. Paste it in the @token variable at the top of this file
+# 4. Execute any authenticated request
+#
+# OR use the REST Client extension feature:
+# After login, the token is stored in {{login.response.body.token}}
+# You can reference it like this: Authorization: Bearer {{login.response.body.token}}

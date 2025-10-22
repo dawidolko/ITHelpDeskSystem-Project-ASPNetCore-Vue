@@ -89,7 +89,15 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT Authorization header using the Bearer scheme. Enter your token in the text input below."
+        Description = @"JWT Authorization header using the Bearer scheme.
+
+**How to use:**
+1. Login via POST /api/auth/login
+2. Copy the 'token' value from response
+3. Paste ONLY the token here (without 'Bearer' prefix)
+4. Click 'Authorize' button
+
+**Example token:** eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -126,6 +134,10 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "IT Help Desk API v1");
     c.RoutePrefix = "swagger";
+    c.DocumentTitle = "IT Help Desk API - Swagger UI";
+    c.DefaultModelsExpandDepth(-1);
+    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+    c.DisplayRequestDuration();
 });
 
 app.UseCors("AllowVueApp");
