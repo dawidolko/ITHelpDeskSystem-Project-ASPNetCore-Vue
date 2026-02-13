@@ -1,4 +1,5 @@
 using HelpDeskAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskAPI.Data;
 
@@ -6,9 +7,17 @@ public static class DbSeeder
 {
     public static void Initialize(HelpDeskContext context)
     {
-        if (context.Users.Any())
+        // Check if data already exists (safely)
+        try
         {
-            return;
+            if (context.Users.Any())
+            {
+                return;
+            }
+        }
+        catch
+        {
+            // Table might not exist yet or other issue, continue with seeding
         }
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!");

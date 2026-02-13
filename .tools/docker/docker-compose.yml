@@ -1,0 +1,103 @@
+name: ithelpdesk-project
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: ithelpdesk-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-RootPassword2024!}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-helpdesk_db}
+      MYSQL_USER: ${MYSQL_USER:-helpdesk_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-HelpDesk2024!}
+    ports:
+      - "${MYSQL_PORT:-3307}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ithelpdesk-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD:-RootPassword2024!}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Backend API (.NET Core)
+  backend:
+    image: ithelpdesk-project-backend:latest
+    build:
+      context: ../../
+      dockerfile: .tools/docker/Dockerfile.backend
+    container_name: ithelpdesk-backend
+    restart: unless-stopped
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=${MYSQL_DATABASE:-helpdesk_db};User=${MYSQL_USER:-helpdesk_user};Password=${MYSQL_PASSWORD:-HelpDesk2024!};Port=3306;
+      - Jwt__Key=${JWT_KEY:-SuperSecretKeyForJWTTokenGeneration2024!MustBeAtLeast32Characters}
+      - Jwt__Issuer=${JWT_ISSUER:-ITHelpDeskAPI}
+      - Jwt__Audience=${JWT_AUDIENCE:-ITHelpDeskClient}
+    ports:
+      - "${BACKEND_PORT:-5000}:5000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - ithelpdesk-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend (Vue.js + Vite)
+  frontend:
+    image: ithelpdesk-project-frontend:latest
+    build:
+      context: ../../
+      dockerfile: .tools/docker/Dockerfile.frontend
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:5000/api}
+    container_name: ithelpdesk-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    networks:
+      - ithelpdesk-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:80",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  ithelpdesk-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

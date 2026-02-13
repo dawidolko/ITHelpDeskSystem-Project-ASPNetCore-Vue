@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useTicketStore } from "../../stores/ticketStore";
 import { useUserStore } from "../../stores/userStore";

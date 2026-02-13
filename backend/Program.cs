@@ -146,22 +146,51 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Health check endpoint for Docker
+app.MapGet("/api/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))
+    .WithName("HealthCheck")
+    .WithTags("Health")
+    .Produces(200);
+
 app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<HelpDeskContext>();
+    var logger = services.GetRequiredService<ILogger<Program>>();
     
-    try
+    // Retry logic for database connection
+    var maxRetries = 15;
+    var retryCount = 0;
+    var retryDelay = TimeSpan.FromSeconds(5);
+    
+    while (retryCount < maxRetries)
     {
-        context.Database.Migrate();
-        DbSeeder.Initialize(context);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
+        try
+        {
+            logger.LogInformation("Attempting to connect to database and run migrations... (attempt {Count}/{Max})", retryCount + 1, maxRetries);
+            
+            // Apply pending migrations (creates database and all tables)
+            context.Database.Migrate();
+            logger.LogInformation("Database migrations applied successfully.");
+            
+            // Seed the database with initial data
+            DbSeeder.Initialize(context);
+            logger.LogInformation("Database seeding completed successfully.");
+            break;
+        }
+        catch (Exception ex)
+        {
+            retryCount++;
+            if (retryCount >= maxRetries)
+            {
+                logger.LogError(ex, "Failed to connect to database after {Count} attempts. Application will exit.", maxRetries);
+                throw;
+            }
+            logger.LogWarning(ex, "Database connection failed. Retrying in {Delay} seconds... (attempt {Count}/{Max})", retryDelay.TotalSeconds, retryCount, maxRetries);
+            Thread.Sleep(retryDelay);
+        }
     }
 }
 

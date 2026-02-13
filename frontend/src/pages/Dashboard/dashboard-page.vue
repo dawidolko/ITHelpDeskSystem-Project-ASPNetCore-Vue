@@ -24,7 +24,6 @@ onMounted(async () => {
 
 const stats = computed(() => ticketStore.statistics);
 const recentTickets = computed(() => ticketStore.tickets.slice(0, 5));
-const currentUser = computed(() => userStore.currentUser);
 
 const goToTickets = () => {
   router.push("/tickets");

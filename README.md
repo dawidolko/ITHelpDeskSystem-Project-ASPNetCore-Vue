@@ -8,10 +8,11 @@
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-9.0-512BD4?style=for-the-badge&logo=.net&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 Full-featured IT Help Desk system with REST API backend and Vue.js SPA frontend.
 
-[Quick Start](#-quick-start) • [Documentation](docs/README.md) • [API Documentation (Swagger)](http://localhost:5000/swagger)
+[Quick Start](#-quick-start) • [Docker Setup](#-docker-deployment-recommended) • [Documentation](docs/README.md) • [API Documentation (Swagger)](http://localhost:5000/swagger)
 
 </div>
 
@@ -99,6 +100,13 @@ ITHelpDeskSystem-Project-ASPNetCore-Vue/
 │ ├── 📖 README.md # Detailed documentation
 │ ├── 📊 API.md # API reference
 │ └── 🔧 SETUP.md # Setup guide
+├── 📁 .tools/ # Development tools
+│ └── 📁 docker/ # Docker deployment
+│     ├── 🐳 docker-compose.yml # Docker orchestration
+│     ├── 📋 Dockerfile.backend # Backend container
+│     ├── 📋 Dockerfile.frontend # Frontend container
+│     ├── ⚙️ .env.example # Environment variables
+│     └── 📖 README.md # Docker documentation
 └── 📖 README.md # Main documentation
 
 ```
@@ -160,6 +168,36 @@ npm run dev
 - **Frontend (SPA):** [http://localhost:5173](http://localhost:5173)
 - **Backend API:** [http://localhost:5000](http://localhost:5000)
 - **Swagger UI:** [http://localhost:5000/swagger](http://localhost:5000/swagger)
+
+## 🐳 Docker Deployment (Recommended)
+
+The easiest way to run the entire application stack (database, backend, and frontend) is using Docker:
+
+```bash
+cd .tools/docker
+docker-compose up -d
+```
+
+**Access the application:**
+
+- **Frontend:** [http://localhost:8080](http://localhost:8080)
+- **Backend API:** [http://localhost:5001](http://localhost:5001)
+- **Swagger UI:** [http://localhost:5001/swagger](http://localhost:5001/swagger)
+
+**📚 Full Docker documentation and troubleshooting guide:** [.tools/docker/README.md](.tools/docker/README.md)
+
+**Docker features:**
+
+- ✅ One command setup - no manual installation needed
+- ✅ Isolated environment - no conflicts with system packages
+- ✅ Automatic database migrations
+- ✅ Pre-configured networking between services
+- ✅ Health checks for all services
+- ✅ Easy cleanup and restart
+
+**Requirements:** Docker 20.10+ and Docker Compose 2.0+
+
+---
 
 ## ⚙️ System Requirements
 
