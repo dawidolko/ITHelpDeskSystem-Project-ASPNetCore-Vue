@@ -34,6 +34,7 @@ EXPOSE 5000
 
 # Entry point script
 COPY .tools/docker/docker-entrypoint-backend.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint-backend.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint-backend.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint-backend.sh
 
 ENTRYPOINT ["docker-entrypoint-backend.sh"]

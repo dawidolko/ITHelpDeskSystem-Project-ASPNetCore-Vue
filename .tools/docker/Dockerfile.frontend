@@ -12,7 +12,7 @@ RUN npm ci
 COPY frontend/ .
 
 # Build argument for API URL
-ARG VITE_API_URL=http://localhost:5000
+ARG VITE_API_URL=http://localhost:5001/api
 ENV VITE_API_URL=$VITE_API_URL
 
 # Build the app
