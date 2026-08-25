@@ -1,8 +1,10 @@
-# ITHelpDeskSystem-Project-ASPNetCore-Vue 
+# ITHelpDeskSystem-Project-ASPNetCore-Vue
 
-> 🚀 **Modern IT Help Desk Ticketing System** - Build enterprise-grade support platforms with ASP.NET Core REST API, Vue.js SPA, and advanced ticket management
+> 🚀 **Modern IT Help Desk Ticketing System** - Enterprise-grade support platform with an ASP.NET Core REST API, a Vue 3 SPA, and advanced ticket management
 
-<div align="center">
+Welcome to the **IT Help Desk System** repository! This comprehensive ticketing solution manages technical support requests inside an organization with a modern full-stack architecture. Built with an **ASP.NET Core 9.0** REST API backend and a **Vue 3 + TypeScript** SPA frontend, the system provides efficient ticket lifecycle management, role-based access control, powerful search and filtering, and an intuitive user interface.
+
+The platform's centrepiece is its **SFWP** (Sort, Filter, Search, Pagination) query layer, backed by JWT authentication, dashboard statistics, public and internal comments, and a responsive Tailwind UI. It is a practical reference for RESTful API design, EF Core data access, and enterprise application architecture.
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.3-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-9.0-512BD4?style=for-the-badge&logo=.net&logoColor=white)
@@ -10,357 +12,232 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-Full-featured IT Help Desk system with REST API backend and Vue.js SPA frontend.
-
-[Quick Start](#-quick-start) • [Docker Setup](#-docker-deployment-recommended) • [Documentation](docs/README.md) • [API Documentation (Swagger)](http://localhost:5000/swagger)
-
-</div>
+📖 [Full project documentation](docs/README.md) • 🎨 [Tailwind classes guide](docs/TAILWIND_CLASSES_GUIDE.md) • 🔌 [Swagger UI](http://localhost:5000/swagger)
 
 ---
 
-## 📋 Description
+## 🎯 Key Features
 
-Welcome to the **IT Help Desk System** repository! This comprehensive ticketing solution manages technical support requests in organizations with a modern full-stack architecture. Built with ASP.NET Core 9.0 REST API backend and Vue 3 + TypeScript SPA frontend, the system provides efficient ticket lifecycle management, role-based access control, powerful search and filtering capabilities, and an intuitive user interface.
+### 🎫 Ticket Management
 
-The platform features advanced SFWP (Sort, Filter, Search, Pagination) capabilities, JWT authentication, real-time dashboard statistics, public and internal comments, and responsive design. Perfect for learning modern web development practices, RESTful API design, and enterprise application architecture.
+- 🔁 **Full CRUD Operations** — create, read, update and delete tickets
+- 👷 **Assignment System** — assign tickets to technicians
+- 📍 **Seven Ticket Statuses** — New, Open, InProgress, OnHold, Resolved, Closed, Reopened
+- 🔥 **Four Priority Levels with SLA** — Low (7 days), Medium (3 days), High (24 h), Critical (4 h)
+- 🗂️ **Seven Categories** — Hardware, Software, Network, Account, Email, Printer, Other
+- ⏰ **Due Date Management** — with automatic overdue detection
+- 👁️ **View Count Tracking** — tickets can be sorted by popularity
 
-## 📁 Repository Structure
+### 🔍 Advanced Search & Filtering (SFWP)
 
-```
+SFWP is the system's signature capability: every ticket listing request accepts one strongly-typed, server-validated `TicketQueryParameters` object that combines **S**orting, **F**iltering, **S**earching and **P**agination in a single query, returning a `PagedResult<TicketDto>` envelope.
 
-ITHelpDeskSystem-Project-ASPNetCore-Vue/
-├── 📁 backend/ # ASP.NET Core REST API
-│ ├── 📁 Controllers/
-│ │ ├── 🔐 AuthController.cs # Authentication endpoints
-│ │ ├── 🎫 TicketsController.cs # Ticket management
-│ │ ├── 👥 UsersController.cs # User management
-│ │ ├── 💬 CommentsController.cs # Comment operations
-│ │ └── 📊 StatsController.cs # Statistics endpoints
-│ ├── 📁 Data/
-│ │ ├── 🗄️ HelpDeskContext.cs # EF Core DbContext
-│ │ └── 🌱 DbSeeder.cs # Database seeding
-│ ├── 📁 DTOs/
-│ │ ├── AuthDtos.cs # Authentication DTOs
-│ │ ├── TicketDtos.cs # Ticket DTOs
-│ │ ├── UserDtos.cs # User DTOs
-│ │ └── CommentDtos.cs # Comment DTOs
-│ ├── 📁 Models/
-│ │ ├── 🎫 Ticket.cs # Ticket entity
-│ │ ├── 👤 User.cs # User entity
-│ │ ├── 💬 Comment.cs # Comment entity
-│ │ ├── 🏢 Department.cs # Department entity
-│ │ └── 📋 Enums.cs # Status, Priority, Role enums
-│ ├── 📁 Services/
-│ │ ├── IAuthService.cs
-│ │ ├── ITicketService.cs
-│ │ └── IEmailService.cs
-│ ├── 📁 Migrations/ # EF Core migrations
-│ ├── ⚙️ appsettings.json # Configuration
-│ ├── 🚀 Program.cs # Application entry point
-│ ├── 🔧 start.sh # Linux/macOS startup script
-│ └── 🔧 start.bat # Windows startup script
-├── 📁 frontend/ # Vue.js SPA
-│ ├── 📁 src/
-│ │ ├── 📁 components/
-│ │ │ ├── TicketList.vue
-│ │ │ ├── TicketForm.vue
-│ │ │ ├── CommentSection.vue
-│ │ │ └── UserManagement.vue
-│ │ ├── 📁 pages/
-│ │ │ ├── 🏠 Dashboard.vue # Dashboard with stats
-│ │ │ ├── 🎫 Tickets.vue # Ticket listing
-│ │ │ ├── 📝 TicketDetail.vue # Ticket details
-│ │ │ ├── 🔐 Login.vue # Login page
-│ │ │ ├── 📝 Register.vue # Registration page
-│ │ │ └── 👥 Users.vue # User management
-│ │ ├── 📁 routes/
-│ │ │ └── index.ts # Vue Router config
-│ │ ├── 📁 services/
-│ │ │ ├── api.ts # Axios instance
-│ │ │ ├── authService.ts # Auth API calls
-│ │ │ ├── ticketService.ts # Ticket API calls
-│ │ │ └── userService.ts # User API calls
-│ │ ├── 📁 stores/
-│ │ │ ├── auth.ts # Pinia auth store
-│ │ │ ├── tickets.ts # Pinia ticket store
-│ │ │ └── users.ts # Pinia user store
-│ │ ├── 📁 types/
-│ │ │ ├── ticket.ts # TypeScript interfaces
-│ │ │ ├── user.ts
-│ │ │ └── api.ts
-│ │ ├── 💻 App.vue # Root component
-│ │ └── 🚀 main.ts # Vue entry point
-│ ├── 📦 package.json # Node.js dependencies
-│ ├── ⚙️ vite.config.ts # Vite configuration
-│ ├── 🎨 tailwind.config.js # Tailwind CSS config
-│ ├── 📝 tsconfig.json # TypeScript config
-│ ├── 🔧 start.sh # Linux/macOS startup script
-│ └── 🔧 start.bat # Windows startup script
-├── 📁 docs/ # Project documentation
-│ ├── 📖 README.md # Detailed documentation
-│ ├── 📊 API.md # API reference
-│ └── 🔧 SETUP.md # Setup guide
-├── 📁 .tools/ # Development tools
-│ └── 📁 docker/ # Docker deployment
-│     ├── 🐳 docker-compose.yml # Docker orchestration
-│     ├── 📋 Dockerfile.backend # Backend container
-│     ├── 📋 Dockerfile.frontend # Frontend container
-│     ├── ⚙️ .env.example # Environment variables
-│     └── 📖 README.md # Docker documentation
-└── 📖 README.md # Main documentation
+- 🔎 **Full-Text Search** — across ticket title, description and user names (max 200 characters)
+- 🎚️ **Multi-Criteria Filtering** — status, priority, category, assigned technician (`assignedToId`), creator (`createdById`) and overdue flag
+- ↕️ **Flexible Sorting** — by `id`, `title`, `status`, `priority`, `category`, `createdAt`, `updatedAt` or `viewcount`, ascending or descending
+- 📄 **Smart Pagination** — `page` (min 1) and `pageSize` (1-100, default 10), with total pages and total count returned
+- 🛡️ **Validated Input** — range and regular-expression attributes reject invalid parameters with `400 Bad Request`
 
-```
+### 🔐 Authentication & Authorization
 
-## 🚀 Quick Start
+- 🔑 **JWT-Based Authentication** with configurable issuer, audience and expiry
+- 🧑‍⚖️ **Role-Based Access Control (RBAC)**
+  - **User** — creates tickets, sees only their own tickets, adds public comments
+  - **Technician** — sees all tickets, updates status, adds internal notes
+  - **Admin** — full access, user management, role changes, ticket deletion
+- 📝 **Public Registration** — new accounts get the User role by default
+- 🔒 **Secure Password Hashing** with BCrypt
 
-### Backend Setup
+### 👥 User Management
 
-#### Linux/macOS:
+- 👤 **User Profiles** with department assignment
+- 🛠️ **Admin Panel** for creating, editing and deleting users
+- 🔄 **Role Management** — change user roles (Admin only)
+- 📇 **Technician Directory** — dedicated endpoint for assignment dropdowns
 
-```bash
-cd backend
-./start.sh
-```
+### 💬 Comment System
 
-#### Windows:
+- 🌐 **Public Comments** — visible to everyone involved in the ticket
+- 🔏 **Internal Notes** — restricted to Technicians and Admins
+- 🕰️ **Chronological Timeline** of all interactions on a ticket
 
-```bash
-cd backend
-start.bat
-```
+### 📊 Dashboard & Statistics
 
-#### Manual Setup:
+- 📈 **Key Metrics** — total tickets plus open, in-progress, resolved and closed counts
+- 🥧 **Distribution Views** — tickets broken down by priority and category
+- ⚡ **Live Updates** — statistics served from a dedicated `/api/tickets/statistics` endpoint
 
-```bash
-cd backend
-dotnet tool install --global dotnet-ef
-dotnet restore
-dotnet ef database update
-dotnet run
-```
+### 🎨 Modern User Interface & Tooling
 
-### Frontend Setup
-
-#### Linux/macOS:
-
-```bash
-cd frontend
-./start.sh
-```
-
-#### Windows:
-
-```bash
-cd frontend
-start.bat
-```
-
-#### Manual Setup:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-### Access URLs
-
-- **Frontend (SPA):** [http://localhost:5173](http://localhost:5173)
-- **Backend API:** [http://localhost:5000](http://localhost:5000)
-- **Swagger UI:** [http://localhost:5000/swagger](http://localhost:5000/swagger)
-
-## 🐳 Docker Deployment (Recommended)
-
-The easiest way to run the entire application stack (database, backend, and frontend) is using Docker:
-
-```bash
-cd .tools/docker
-docker-compose up -d
-```
-
-**Access the application:**
-
-- **Frontend:** [http://localhost:8080](http://localhost:8080)
-- **Backend API:** [http://localhost:5001](http://localhost:5001)
-- **Swagger UI:** [http://localhost:5001/swagger](http://localhost:5001/swagger)
-
-**📚 Full Docker documentation and troubleshooting guide:** [.tools/docker/README.md](.tools/docker/README.md)
-
-**Docker features:**
-
-- ✅ One command setup - no manual installation needed
-- ✅ Isolated environment - no conflicts with system packages
-- ✅ Automatic database migrations
-- ✅ Pre-configured networking between services
-- ✅ Health checks for all services
-- ✅ Easy cleanup and restart
-
-**Requirements:** Docker 20.10+ and Docker Compose 2.0+
+- 📱 **Responsive Design** with TailwindCSS, mobile-first
+- 🧭 **Intuitive Navigation** with Vue Router and a Pinia-backed auth store
+- ⚡ **Hot Module Replacement** via Vite for instant frontend feedback
+- 📚 **Swagger / OpenAPI** with enum schema filters and rich annotations
+- ❤️ **Health Endpoint** — `/api/health` for container health checks
 
 ---
 
-## ⚙️ System Requirements
+## 🏗️ Architecture
 
-### **Essential Tools:**
+### Application Layer
+
+![Application Layer](docs/diagrams/app-layer.svg)
+
+### Application Architecture
+
+![Application Architecture](docs/diagrams/architecture.svg)
+
+---
+
+## 🧩 Modules / Services
+
+| Service | Description | Stack |
+|---|---|---|
+| `ithelpdesk-frontend` | Vue 3 SPA built with Vite and served by Nginx | Vue 3, TypeScript, Pinia, Tailwind CSS, Nginx |
+| `ithelpdesk-backend` | REST API, JWT auth, SFWP query layer, statistics, Swagger | ASP.NET Core 9.0, EF Core 8, Pomelo MySQL |
+| `ithelpdesk-mysql` | Relational store, health-checked before the backend starts | MySQL 8.0 |
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+
+- **Vue 3.3** — progressive JavaScript framework with the composition API
+- **TypeScript 5** — type-safe application code
+- **Pinia 2** — state management (auth, tickets, users stores)
+- **Vue Router 4** — client-side routing
+- **Axios** — HTTP client with a shared API instance
+- **@unhead/vue** — document head and metadata management
+- **TailwindCSS 3** + **PostCSS** + **Autoprefixer** — utility-first styling
+- **Vite 4** + **vue-tsc** — build tooling and type-checked builds
+
+### Backend
+
+- **ASP.NET Core 9.0** — modern web framework
+- **Entity Framework Core 8.0** — ORM for database access
+- **Pomelo.EntityFrameworkCore.MySql 8** — MySQL provider
+- **Microsoft.AspNetCore.Authentication.JwtBearer 9** — JWT bearer authentication
+- **BCrypt.Net-Next** — password hashing
+- **Swashbuckle.AspNetCore 7** (+ Annotations) — Swagger / OpenAPI documentation
+
+### Infrastructure
+
+- **MySQL 8.0** — relational database with a Docker healthcheck
+- **Docker** & **Docker Compose** — full-stack orchestration
+- **Nginx** — static asset serving for the SPA
+- **EF Core Migrations** — schema versioning, applied automatically in the container entrypoint
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
 
 - **.NET SDK** 9.0 or higher
-- **Node.js** 18+ (20+ recommended)
-- **npm** 9+ (10+ recommended)
+- **Node.js** 18+ (20+ recommended) and **npm** 9+
 - **MySQL** 8.0 or higher
-- **Git** for version control
+- **Git**
 
-### **Installation by Platform:**
+Or, for the Docker path: **Docker 20.10+** and **Docker Compose 2.0+**.
 
-#### macOS (Homebrew):
+Platform installation:
 
 ```bash
+# macOS (Homebrew)
 brew install --cask dotnet-sdk
-brew install node
-brew install mysql
-```
+brew install node mysql
 
-#### Windows:
-
-- [.NET SDK](https://dotnet.microsoft.com/download)
-- [Node.js](https://nodejs.org/)
-- [MySQL](https://dev.mysql.com/downloads/installer/)
-
-#### Linux (Ubuntu/Debian):
-
-```bash
+# Linux (Ubuntu/Debian)
 wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 sudo apt-get update
 sudo apt-get install -y dotnet-sdk-9.0 nodejs mysql-server
 ```
 
-### **Development Environment:**
+On Windows, install the [.NET SDK](https://dotnet.microsoft.com/download), [Node.js](https://nodejs.org/) and [MySQL](https://dev.mysql.com/downloads/installer/) from their official installers.
 
-- **IDE:** Visual Studio 2022, VS Code, Rider
-- **Database Tool:** MySQL Workbench, DBeaver, phpMyAdmin
-- **API Testing:** Postman, Insomnia, or Swagger UI
-- **Browser DevTools** for frontend debugging
+### 1. Clone the Repository
 
-### **Recommended Extensions:**
+```bash
+git clone https://github.com/dawidolko/ITHelpDeskSystem-Project-ASPNetCore-Vue.git
+cd ITHelpDeskSystem-Project-ASPNetCore-Vue
+```
 
-- **VS Code:**
-  - C# Dev Kit
-  - Volar (Vue 3 support)
-  - ESLint
-  - Prettier
-  - MySQL extension
+### 2. Install Dependencies
 
-## ✨ Key Features
+```bash
+# Backend
+cd backend
+dotnet tool install --global dotnet-ef
+dotnet restore
 
-### **🎫 Ticket Management**
+# Frontend
+cd ../frontend
+npm install
+```
 
-- **Full CRUD Operations** for tickets
-- **Assignment System:**
-  - Manual assignment to technicians
-  - Auto-assignment ready
-- **Ticket Statuses:** New, Open, InProgress, Resolved, Closed
-- **Priority Levels:** Low, Medium, High, Critical
-- **Categories:** Hardware, Software, Network, Access, Email, Other
-- **Due Date Management** with overdue detection
-- **Ticket History** and audit trail
+### 3. Run
 
-### **🔍 Advanced Search & Filtering (SFWP)**
+#### 🐳 Docker Deployment (Recommended)
 
-- **Full-Text Search:** Title, description, user names
-- **Multi-Criteria Filtering:**
-  - Status (New, Open, InProgress, Resolved, Closed)
-  - Priority (Low, Medium, High, Critical)
-  - Category (Hardware, Software, Network, etc.)
-  - Assigned technician
-  - Overdue status
-  - Date ranges
-- **Flexible Sorting:** Sort by any field (title, status, priority, createdAt, updatedAt)
-- **Smart Pagination:** Page size control, total pages/count
+The easiest way to run the entire stack — database, backend and frontend — is Docker Compose:
 
-### **🔐 Authentication & Authorization**
+```bash
+cd .tools/docker
+docker compose up -d
+```
 
-- **JWT-Based Authentication** with secure token management
-- **Role-Based Access Control (RBAC):**
-  - **User:** Create tickets, view own tickets, add public comments
-  - **Technician:** View all tickets, update status, add internal notes
-  - **Admin:** Full system access, user management, role changes
-- **Public Registration** (User role by default)
-- **Secure Password Hashing** with BCrypt
-- **Token Refresh** mechanism
+**Access the application:**
 
-### **👥 User Management**
+- **Frontend** — [http://localhost:8080](http://localhost:8080)
+- **Backend API** — [http://localhost:5001](http://localhost:5001)
+- **Swagger UI** — [http://localhost:5001/swagger](http://localhost:5001/swagger)
 
-- **User Profiles** with department assignment
-- **Admin Panel** for user administration
-- **Role Management:** Change user roles (Admin only)
-- **Technician Directory** for ticket assignment
-- **Department Organization** for better structure
-- **User Activity Tracking**
+Docker gives you a one-command setup with no manual installation, an isolated environment, automatic database migrations on backend startup, pre-configured service networking, health checks on all three services, and easy cleanup and restart. Ports and credentials are overridable through environment variables (`FRONTEND_PORT`, `BACKEND_PORT`, `MYSQL_PORT`, `MYSQL_DATABASE`, `MYSQL_USER`, `MYSQL_PASSWORD`, `JWT_KEY`, `JWT_ISSUER`, `JWT_AUDIENCE`, `VITE_API_URL`).
 
-### **💬 Comment System**
+**📚 Full Docker documentation and troubleshooting guide:** [.tools/docker/README.md](.tools/docker/README.md)
 
-- **Public Comments:** Visible to all users involved
-- **Internal Notes:** Technician and Admin only
-- **Chronological Timeline** of all interactions
-- **Rich Text Support** for formatted comments
-- **Comment Notifications** (email integration ready)
+#### 🖥️ Local Development
 
-### **📊 Dashboard & Statistics**
+Startup scripts are provided for both halves of the stack:
 
-- **Key Metrics Display:**
-  - Total tickets by status
-  - Average resolution time
-  - Tickets by priority distribution
-  - Category breakdown
-  - Resolution rate percentage
-- **Visual Charts** with data visualization
-- **Real-Time Updates** via API polling
-- **Customizable Date Ranges** for statistics
+```bash
+# Backend — Linux/macOS
+cd backend && ./start.sh
+# Backend — Windows
+cd backend && start.bat
 
-### **🎨 Modern User Interface**
+# Frontend — Linux/macOS
+cd frontend && ./start.sh
+# Frontend — Windows
+cd frontend && start.bat
+```
 
-- **Responsive Design** with TailwindCSS
-- **Dark Mode** support (optional)
-- **Intuitive Navigation** with Vue Router
-- **Loading States** and error handling
-- **Toast Notifications** for user feedback
-- **Mobile-First** approach
+Or run them manually:
 
-### **⚡ Performance & Development**
+```bash
+# Terminal 1 — Backend
+cd backend
+dotnet ef database update
+dotnet run          # or: dotnet watch run
 
-- **Hot Module Replacement (HMR)** with Vite
-- **Fast Backend** with ASP.NET Core 9.0
-- **Optimized Database Queries** with EF Core
-- **Lazy Loading** for frontend components
-- **API Response Caching** where appropriate
+# Terminal 2 — Frontend
+cd frontend
+npm run dev
+```
 
-## 🛠️ Technologies Used
+**Access URLs:**
 
-### **Backend Stack:**
+- **Frontend (SPA)** — [http://localhost:5173](http://localhost:5173)
+- **Backend API** — [http://localhost:5000](http://localhost:5000)
+- **Swagger UI** — [http://localhost:5000/swagger](http://localhost:5000/swagger)
 
-- **ASP.NET Core 9.0** - Modern web framework
-- **Entity Framework Core 8.0** - ORM for database access
-- **MySQL 8.0** - Relational database (Pomelo provider)
-- **JWT Authentication** - Secure token-based auth
-- **Swashbuckle/Swagger** - API documentation
-- **AutoMapper** - Object-object mapping
-- **FluentValidation** - Input validation
-
-### **Frontend Stack:**
-
-- **Vue 3.3** - Progressive JavaScript framework
-- **TypeScript 5.0** - Type-safe JavaScript
-- **Pinia** - State management
-- **Vue Router** - Client-side routing
-- **Axios** - HTTP client
-- **TailwindCSS** - Utility-first CSS framework
-- **Vite** - Next generation build tool
+---
 
 ## 🔧 Configuration
 
 ### 1. Database Setup
-
-Create MySQL database and user:
 
 ```sql
 CREATE DATABASE helpdesk_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -389,7 +266,7 @@ Edit `backend/appsettings.json`:
 
 ### 3. Frontend Configuration
 
-Create/edit `frontend/.env`:
+Create or edit `frontend/.env`:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
@@ -397,7 +274,7 @@ VITE_API_URL=http://localhost:5000/api
 
 ### 4. CORS Configuration (Optional)
 
-In `backend/Program.cs`, add additional origins if needed:
+Add extra origins in `backend/Program.cs` if you serve the SPA from another port:
 
 ```csharp
 policy.WithOrigins(
@@ -407,55 +284,43 @@ policy.WithOrigins(
 );
 ```
 
+---
+
 ## 💻 Development
 
-### Backend Development Commands
+### Backend Commands
 
 ```bash
 cd backend
 
-# Run with hot reload
-dotnet watch run
+dotnet watch run                                  # run with hot reload
 
-# Entity Framework migrations
-dotnet ef migrations add <MigrationName>
+dotnet ef migrations add <MigrationName>          # Entity Framework migrations
 dotnet ef database update
 dotnet ef migrations remove
 dotnet ef migrations script
 
-# Build for production
-dotnet build --configuration Release
+dotnet build --configuration Release              # build for production
 dotnet publish --configuration Release
 ```
 
-### Frontend Development Commands
+### Frontend Commands
 
 ```bash
 cd frontend
 
-# Development server with HMR
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Lint code
-npm run lint
-
-# Type check
-npm run type-check
+npm run dev       # development server with HMR
+npm run build     # type-check (vue-tsc) and build for production
+npm run preview   # preview the production build
 ```
 
 ### API Testing Examples
 
-Using curl:
+The repository ships a ready-to-use request collection at `backend/api-test.http`. With curl:
 
 ```bash
-# Get tickets with filtering
-curl "http://localhost:5000/api/tickets?status=Open&priority=High&sortBy=createdAt&sortOrder=desc"
+# Get tickets with SFWP parameters
+curl "http://localhost:5000/api/tickets?status=Open&priority=High&sortBy=createdAt&sortOrder=desc&page=1&pageSize=10"
 
 # Login
 curl -X POST http://localhost:5000/api/auth/login \
@@ -463,185 +328,258 @@ curl -X POST http://localhost:5000/api/auth/login \
   -d '{"email":"admin@firma.pl","password":"Admin123!"}'
 ```
 
+---
+
 ## 🔌 API Overview
 
 ### Authentication Endpoints (Public)
 
-- `POST /api/auth/register` - Register new user (User role by default)
-- `POST /api/auth/login` - Login and receive JWT token
-- `POST /api/auth/refresh` - Refresh access token
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register a new user (User role by default) |
+| POST | `/api/auth/login` | Login and receive a JWT token |
 
 ### Ticket Endpoints (Requires Auth)
 
-- `GET /api/tickets` - List tickets with SFWP parameters
-- `GET /api/tickets/{id}` - Get ticket details
-- `POST /api/tickets` - Create new ticket
-- `PUT /api/tickets/{id}` - Update ticket
-- `DELETE /api/tickets/{id}` - Delete ticket (Admin only)
-- `GET /api/tickets/statistics` - Get dashboard statistics
-
-### Comment Endpoints (Requires Auth)
-
-- `GET /api/tickets/{id}/comments` - Get ticket comments
-- `POST /api/tickets/{id}/comments` - Add comment to ticket
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/tickets` | Any | List tickets with full SFWP support |
+| GET | `/api/tickets/{id}` | Any | Get ticket details |
+| POST | `/api/tickets` | Any | Create a new ticket |
+| PUT | `/api/tickets/{id}` | Any | Update a ticket |
+| DELETE | `/api/tickets/{id}` | Admin | Delete a ticket |
+| POST | `/api/tickets/{id}/comments` | Any | Add a comment to a ticket |
+| GET | `/api/tickets/statistics` | Any | Dashboard statistics |
 
 ### User Endpoints (Requires Auth)
 
-- `GET /api/users` - List users (Admin/Technician)
-- `GET /api/users/technicians` - Get technician list
-- `GET /api/users/{id}` - Get user details
-- `PUT /api/users/{id}/role` - Change user role (Admin only)
-- `DELETE /api/users/{id}` - Delete user (Admin only)
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/users` | Admin / Technician | List users |
+| GET | `/api/users/technicians` | Any | Get the technician list |
+| GET | `/api/users/{id}` | Any | Get user details |
+| POST | `/api/users` | Admin | Create a user |
+| PUT | `/api/users/{id}` | Admin | Update a user |
+| PUT | `/api/users/{id}/role` | Admin | Change a user's role |
+| DELETE | `/api/users/{id}` | Admin | Delete a user |
+
+### Utility
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/health` | Health check used by the Docker healthcheck |
 
 ### SFWP Query Parameters
 
-- `sortBy` - Field to sort by (title, status, priority, createdAt, updatedAt)
-- `sortOrder` - Sort direction (asc, desc)
-- `status` - Filter by status
-- `priority` - Filter by priority
-- `category` - Filter by category
-- `assignedToId` - Filter by assigned technician
-- `isOverdue` - Filter overdue tickets
-- `searchTerm` - Full-text search
-- `page` - Page number (default: 1)
-- `pageSize` - Items per page (default: 10)
+| Parameter | Values | Default |
+|---|---|---|
+| `page` | integer ≥ 1 | `1` |
+| `pageSize` | 1-100 | `10` |
+| `search` | free text, max 200 chars (title, description, user names) | — |
+| `status` | New, Open, InProgress, OnHold, Resolved, Closed, Reopened | — |
+| `priority` | Low, Medium, High, Critical | — |
+| `category` | Hardware, Software, Network, Account, Email, Printer, Other | — |
+| `assignedToId` | user id | — |
+| `createdById` | user id | — |
+| `isOverdue` | `true` / `false` | — |
+| `sortBy` | id, title, status, priority, category, createdAt, updatedAt, viewcount | `CreatedAt` |
+| `sortOrder` | asc, desc | `desc` |
+
+---
 
 ## 📊 Sample Data
 
-The system includes comprehensive seed data for testing:
+`DbSeeder` populates the database on first startup:
 
 ### Demo Users (18 total)
 
-| Email           | Password  | Role       | Description             |
-| --------------- | --------- | ---------- | ----------------------- |
-| admin@firma.pl  | Admin123! | Admin      | Primary administrator   |
-| admin1@firma.pl | Admin123! | Admin      | Secondary administrator |
-| tech@firma.pl   | Tech123!  | Technician | Lead technician         |
-| tech1@firma.pl  | Tech123!  | Technician | Support technician      |
-| user@firma.pl   | User123!  | User       | Regular user            |
-| user1@firma.pl  | User123!  | User       | Test user               |
+| Email | Password | Role | Description |
+|---|---|---|---|
+| admin@firma.pl | Admin123! | Admin | Primary administrator |
+| admin1@firma.pl | Admin123! | Admin | Secondary administrator |
+| tech@firma.pl | Tech123! | Technician | Lead technician |
+| tech1@firma.pl | Tech123! | Technician | Support technician |
+| user@firma.pl | User123! | User | Regular user |
+| user1@firma.pl | User123! | User | Test user |
 
-_Additional users (3 Admins, 5 Technicians, 10 Users) are also seeded._
+_Additional accounts are also seeded: `admin2@firma.pl`, `tech2@firma.pl`-`tech4@firma.pl` and `user2@firma.pl`-`user9@firma.pl` (3 Admins, 5 Technicians, 10 Users in total)._
 
 ### Sample Tickets (20 total)
 
-- Varied statuses (New, Open, InProgress, Resolved, Closed)
-- Multiple priorities (Low, Medium, High, Critical)
-- Different categories (Hardware, Software, Network, Access, Email, Other)
-- Some tickets with due dates and overdue status
-- Assigned to different technicians
+- Varied statuses, priorities and categories across the full enum ranges
+- Realistic Polish-language titles and descriptions
+- Some tickets carry due dates and land in an overdue state
+- Randomly assigned to seeded technicians and created by seeded users
 
-### Sample Comments (15+ total)
+### Sample Comments
 
-- Mix of public and internal comments
-- Chronological timeline on tickets
-- Demonstrates comment threading
+- Generated across the first 15 tickets, mixing public comments and internal notes
+- Chronologically ordered to demonstrate the ticket timeline
+
+---
+
+## 📁 Project Structure
+
+```
+ITHelpDeskSystem-Project-ASPNetCore-Vue/
+├── 📁 backend/                          # ASP.NET Core 9.0 REST API
+│   ├── 📁 Controllers/
+│   │   ├── 🔐 AuthController.cs         # Register / login
+│   │   ├── 🎫 TicketsController.cs      # Tickets, comments, statistics
+│   │   └── 👥 UsersController.cs        # User & role management
+│   ├── 📁 Data/
+│   │   ├── 🗄️ HelpDeskContext.cs        # EF Core DbContext
+│   │   └── 🌱 DbSeeder.cs               # Database seeding
+│   ├── 📁 DTOs/
+│   │   ├── AuthDtos.cs                  # Auth request/response payloads
+│   │   └── TicketDtos.cs                # Ticket, SFWP query & stats DTOs
+│   ├── 📁 Models/
+│   │   ├── 🎫 Ticket.cs                 # Ticket entity
+│   │   ├── 👤 User.cs                   # User entity
+│   │   ├── 💬 Comment.cs                # Comment entity
+│   │   └── 📋 Enums.cs                  # Status, Priority, Category enums
+│   ├── 📁 Migrations/                   # EF Core migrations
+│   ├── 📁 Swagger/
+│   │   └── EnumSchemaFilter.cs          # Readable enums in OpenAPI
+│   ├── 🚀 Program.cs                    # Entry point, DI, auth, Swagger, health
+│   ├── ⚙️ appsettings.json              # Connection string & JWT settings
+│   ├── 🧪 api-test.http                 # Ready-made API requests
+│   ├── 📦 HelpDeskAPI.csproj            # Project & NuGet references
+│   ├── 🔧 start.sh                      # Linux/macOS startup script
+│   └── 🔧 start.bat                     # Windows startup script
+├── 📁 frontend/                         # Vue 3 + TypeScript SPA
+│   ├── 📁 public/icons/                 # Static icons
+│   ├── 📁 src/
+│   │   ├── 📁 components/
+│   │   │   ├── Pagination.vue
+│   │   │   ├── SearchInput.vue
+│   │   │   ├── StatusBadge.vue
+│   │   │   ├── navigation-global.vue
+│   │   │   └── footer-global.vue
+│   │   ├── 📁 pages/
+│   │   │   ├── Dashboard/dashboard-page.vue
+│   │   │   ├── Tickets/tickets-page.vue
+│   │   │   ├── Tickets/create-ticket-page.vue
+│   │   │   ├── Tickets/ticket-detail-page.vue
+│   │   │   ├── Statistics/statistics-page.vue
+│   │   │   ├── Users/UsersManagementPage.vue
+│   │   │   ├── Login/LoginPage.vue
+│   │   │   ├── Register/RegisterPage.vue
+│   │   │   └── 404/404-page.vue
+│   │   ├── 📁 routes/routes.ts          # Vue Router configuration
+│   │   ├── 📁 services/                 # api.ts, ticketService.ts, userService.ts
+│   │   ├── 📁 stores/                   # Pinia: authStore, ticketStore, userStore
+│   │   ├── 📁 types/ticket.types.ts     # Shared TypeScript interfaces
+│   │   ├── 💻 App.vue                   # Root component
+│   │   ├── 🚀 main.ts                   # Vue entry point
+│   │   └── 🎨 style.css                 # Tailwind entry stylesheet
+│   ├── 📦 package.json                  # Node.js dependencies & scripts
+│   ├── ⚙️ vite.config.ts                # Vite configuration
+│   ├── 🎨 tailwind.config.js            # Tailwind CSS config
+│   ├── 📝 tsconfig.json                 # TypeScript config
+│   ├── 🔧 start.sh                      # Linux/macOS startup script
+│   └── 🔧 start.bat                     # Windows startup script
+├── 📁 docs/                             # Project documentation
+│   ├── 📖 README.md                     # Detailed technical documentation
+│   ├── 🎨 TAILWIND_CLASSES_GUIDE.md     # Styling conventions
+│   ├── 📄 AI2 OE dokumentacja projektu.pdf / .docx
+│   └── 📁 diagrams/                     # Architecture diagrams (SVG)
+├── 📁 .tools/docker/                    # Docker deployment
+│   ├── 🐳 docker-compose.yml            # Service orchestration
+│   ├── 📋 Dockerfile.backend            # Backend container
+│   ├── 📋 Dockerfile.frontend           # Frontend container
+│   ├── 🔧 docker-entrypoint-backend.sh  # Applies migrations, then starts the API
+│   ├── ⚙️ nginx.conf                    # Nginx config for the SPA
+│   ├── 🔧 start.sh / start.bat          # Docker helper scripts
+│   └── 📖 README.md                     # Docker documentation
+└── 📖 README.md                         # Project documentation
+```
+
+---
 
 ## 🧰 Troubleshooting
 
 ### Backend Issues
 
-**MySQL Connection Failed:**
+**MySQL connection failed:**
 
 ```bash
-# Check if MySQL is running
-# macOS:
-brew services list
-brew services start mysql
+# macOS
+brew services list && brew services start mysql
 
-# Linux:
-sudo systemctl status mysql
-sudo systemctl start mysql
+# Linux
+sudo systemctl status mysql && sudo systemctl start mysql
 
-# Test connection:
+# Test the connection
 mysql -u helpdesk_user -p -h localhost
 ```
 
-**Entity Framework Issues:**
+**Entity Framework issues:**
 
 ```bash
-# Install EF tools
-dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef   # install EF tools
+dotnet ef --version                      # check version
 
-# Check version
-dotnet ef --version
-
-# Recreate migrations
-dotnet ef migrations add InitialCreate --force
-dotnet ef database update
-
-# Reset database
-dotnet ef database drop
+dotnet ef database drop                  # reset the database
 dotnet ef database update
 ```
 
 ### Frontend Issues
 
-**CORS Errors:**
+**CORS errors** — verify the backend CORS policy allows the frontend origin, check the actual origin in DevTools, then hard-refresh (Cmd+Shift+R / Ctrl+Shift+R).
 
-- Verify backend CORS configuration allows frontend origin
-- Check browser DevTools Console for actual origin
-- Hard refresh browser (Cmd+Shift+R or Ctrl+Shift+R)
+**API connection failed** — confirm `frontend/.env` has the correct `VITE_API_URL`, that the backend is up (`curl http://localhost:5000/api/health`), and that both servers use `http://` in development.
 
-**API Connection Failed:**
-
-- Verify `frontend/.env` has correct `VITE_API_URL`
-- Check backend is running: `curl http://localhost:5000/api/tickets`
-- Ensure both servers are on http:// during development
-
-**TypeScript Errors:**
+**TypeScript errors:**
 
 ```bash
-# Clean and reinstall
 rm -rf node_modules package-lock.json
 npm cache clean --force
 npm install
-
-# Type check
-npx tsc --noEmit
+npx vue-tsc --noEmit
 ```
 
 ### Database Issues
 
-**Empty Database:**
-
-- Ensure seeding is called in `Program.cs`
-- Check `DbSeeder.cs` runs successfully
-- Drop and recreate database:
+**Empty database** — seeding runs from `Program.cs` via `DbSeeder.Initialize`; if it did not run, drop and recreate:
 
 ```bash
 dotnet ef database drop --force
 dotnet ef database update
 ```
 
-**Migration Conflicts:**
+**Migration conflicts:**
 
 ```bash
-# Remove all migrations
 dotnet ef migrations remove
-
-# Create fresh migration
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
+
+---
 
 ## 🤝 Contributing
 
 Contributions are highly welcomed! Here's how you can help:
 
-- 🐛 **Report bugs** - Found an issue? Let us know!
-- 💡 **Suggest improvements** - Have ideas for better features?
-- 🔧 **Submit pull requests** - Share your enhancements and solutions
-- 📖 **Improve documentation** - Help make the project clearer
+- 🐛 **Report bugs** — found an issue? Let us know!
+- 💡 **Suggest improvements** — have ideas for better features?
+- 🔧 **Submit pull requests** — share your enhancements and solutions
+- 📖 **Improve documentation** — help make the project clearer
 
 Feel free to open issues or reach out through GitHub for any questions or suggestions.
 
-## 👨‍💻 Author
-
-Created by **Dawid Olko** - Part of the full-stack web development series.
+---
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the MIT License.
 
 ---
+
+## 👨‍💻 Author
+
+Created by **[Dawid Olko](https://github.com/dawidolko)**
+
+- **Website** — [dawidolko.pl](https://dawidolko.pl/)
+- **LinkedIn** — [@dawidolko](https://www.linkedin.com/in/dawidolko/)
