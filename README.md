@@ -77,6 +77,24 @@ SFWP is the system's signature capability: every ticket listing request accepts 
 
 ---
 
+## 🖼️ Screenshots
+
+| Dashboard — live statistics | All tickets — SFWP in action |
+|---|---|
+| [<img src="docs/screenshots/dashboard.webp" alt="Dashboard with total, open, in progress, resolved, critical and overdue ticket counters and average resolution time"/>](docs/screenshots/dashboard.webp) | [<img src="docs/screenshots/tickets.webp" alt="Ticket list with search box, status, priority, category and technician filters, sortable columns and pagination"/>](docs/screenshots/tickets.webp) |
+
+| Ticket detail — comments & history | Statistics |
+|---|---|
+| [<img src="docs/screenshots/ticket-detail.webp" alt="Ticket detail view showing description, metadata and the comment thread"/>](docs/screenshots/ticket-detail.webp) | [<img src="docs/screenshots/statistics.webp" alt="Statistics page with aggregated ticket metrics"/>](docs/screenshots/statistics.webp) |
+
+| User management | Sign in |
+|---|---|
+| [<img src="docs/screenshots/users.webp" alt="User management table listing accounts with roles and departments"/>](docs/screenshots/users.webp) | [<img src="docs/screenshots/login.webp" alt="Login page with email and password fields"/>](docs/screenshots/login.webp) |
+
+> Captured from the running Docker stack with the bundled seed data (20 tickets across the full status and priority range, plus admin, technician and user accounts).
+
+---
+
 ## 🏗️ Architecture
 
 ### Application Layer
