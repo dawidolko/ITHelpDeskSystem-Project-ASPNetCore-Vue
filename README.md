@@ -6,11 +6,12 @@ Welcome to the **IT Help Desk System** repository! This comprehensive ticketing 
 
 The platform's centrepiece is its **SFWP** (Sort, Filter, Search, Pagination) query layer, backed by JWT authentication, dashboard statistics, public and internal comments, and a responsive Tailwind UI. It is a practical reference for RESTful API design, EF Core data access, and enterprise application architecture.
 
-![Vue.js](https://img.shields.io/badge/Vue.js-3.3-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-9.0-512BD4?style=for-the-badge&logo=.net&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Vue.js](https://img.shields.io/badge/Vue.js-3.3-4FC08D?logo=vue.js&logoColor=white)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-9.0-512BD4?logo=.net&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 📖 [Full project documentation](docs/README.md) • 🎨 [Tailwind classes guide](docs/TAILWIND_CLASSES_GUIDE.md) • 🔌 [Swagger UI](http://localhost:5000/swagger)
 
@@ -591,7 +592,7 @@ Feel free to open issues or reach out through GitHub for any questions or sugges
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
