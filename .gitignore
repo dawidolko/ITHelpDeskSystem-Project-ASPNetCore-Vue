@@ -419,3 +419,10 @@ FodyWeavers.xsd
 
 # Machine-local Claude settings
 .claude/settings.local.json
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Sekrety stacku produkcyjnego. Wzorzec: .tools/docker/.env.example
+.tools/docker/.env
