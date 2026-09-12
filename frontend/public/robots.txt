@@ -1,0 +1,11 @@
+# Only the landing, sign-in and registration screens have anything to show a
+# crawler; everything past them is a ticket queue behind authentication.
+User-agent: *
+Allow: /
+Disallow: /tickets
+Disallow: /create-ticket
+Disallow: /statistics
+Disallow: /users
+Disallow: /dashboard
+
+Sitemap: https://ithelpdesk.dawidolko.pl/sitemap.xml
