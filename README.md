@@ -2,7 +2,7 @@
 
 > 🚀 **Modern IT Help Desk Ticketing System** - Enterprise-grade support platform with an ASP.NET Core REST API, a Vue 3 SPA, and advanced ticket management
 
-Welcome to the **IT Help Desk System** repository! This comprehensive ticketing solution manages technical support requests inside an organization with a modern full-stack architecture. Built with an **ASP.NET Core 9.0** REST API backend and a **Vue 3 + TypeScript** SPA frontend, the system provides efficient ticket lifecycle management, role-based access control, powerful search and filtering, and an intuitive user interface.
+**IT Help Desk System** manages technical support requests inside an organisation: an **ASP.NET Core 9.0** REST API behind a **Vue 3 + TypeScript** single-page application, covering the ticket lifecycle, role-based access, search and filtering.
 
 The platform's centrepiece is its **SFWP** (Sort, Filter, Search, Pagination) query layer, backed by JWT authentication, dashboard statistics, public and internal comments, and a responsive Tailwind UI. It is a practical reference for RESTful API design, EF Core data access, and enterprise application architecture.
 
