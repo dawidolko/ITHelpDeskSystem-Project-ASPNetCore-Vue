@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://github.com/dawidolko/ITHelpDeskSystem-Project-ASPNetCore-Vue"><img src="docs/readme/banner.webp" alt="ITHelpDeskSystem-Project-ASPNetCore-Vue: fullstack platform. Modern IT Help Desk Ticketing System - Enterprise-grade support platform with an ASP.NET Core REST API, a Vue 3 SPA, and advanced ticket management" width="100%"></a>
+</p>
+
 # ITHelpDeskSystem-Project-ASPNetCore-Vue
 
 > 🚀 **Modern IT Help Desk Ticketing System** - Enterprise-grade support platform with an ASP.NET Core REST API, a Vue 3 SPA, and advanced ticket management
@@ -14,6 +18,8 @@ The platform's centrepiece is its **SFWP** (Sort, Filter, Search, Pagination) qu
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 📖 [Full project documentation](docs/README.md) • 🎨 [Tailwind classes guide](docs/TAILWIND_CLASSES_GUIDE.md) • 🔌 [Swagger UI](http://localhost:5000/swagger)
+
+**[Video](https://youtu.be/CjPaI4beypc)** · [Screenshots](#️-screenshots) · [Getting started](#-getting-started)
 
 ---
 
@@ -598,7 +604,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
-Created by **[Dawid Olko](https://github.com/dawidolko)**
+**Dawid Olko** · Fullstack / AI Developer
 
-- **Website** — [dawidolko.pl](https://dawidolko.pl/)
-- **LinkedIn** — [@dawidolko](https://www.linkedin.com/in/dawidolko/)
+[Portfolio](https://olkodawid.dawidolko.pl) · [CV](https://cv.dawidolko.pl) · [LinkedIn](https://www.linkedin.com/in/dawidolko/) · [GitHub](https://github.com/dawidolko)
