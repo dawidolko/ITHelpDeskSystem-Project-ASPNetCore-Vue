@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! command -v dotnet &> /dev/null; then
-    echo ".NET SDK nie jest zainstalowany!"
+    echo ".NET SDK is not installed!"
     exit 1
 fi
 

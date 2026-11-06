@@ -424,5 +424,5 @@ FodyWeavers.xsd
 .DS_Store
 **/.DS_Store
 
-# Sekrety stacku produkcyjnego. Wzorzec: .tools/docker/.env.example
+# Secrets of the production stack. Template: .tools/docker/.env.example
 .tools/docker/.env

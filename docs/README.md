@@ -98,13 +98,13 @@ System Zarządzania Zgłoszeniami IT to nowoczesna aplikacja webowa typu Help De
 [Route("api/[controller]")]
 public class TicketsController : ControllerBase
 {
-    // GET /api/tickets - Lista z SFWP
-    // GET /api/tickets/{id} - Szczegóły
-    // POST /api/tickets - Utwórz
+    // GET /api/tickets - List with SFWP
+    // GET /api/tickets/{id} - Details
+    // POST /api/tickets - Create
     // PUT /api/tickets/{id} - Aktualizuj
-    // DELETE /api/tickets/{id} - Usuń
+    // DELETE /api/tickets/{id} - Delete
     // GET /api/tickets/{id}/comments - Komentarze
-    // POST /api/tickets/{id}/comments - Dodaj komentarz
+    // POST /api/tickets/{id}/comments - Add a comment
 }
 ```
 
@@ -730,7 +730,7 @@ const api = axios.create({
   },
 });
 
-// Interceptory dla error handling
+// Interceptors for error handling
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -812,12 +812,12 @@ public string Description { get; set; }
 Entity Framework używa **parametryzowanych zapytań**:
 
 ```csharp
-// ✅ Bezpieczne - parametryzowane
+// ✅ Safe - parameterised
 var tickets = await _context.Tickets
     .Where(t => t.Status == status)
     .ToListAsync();
 
-// ❌ NIE ROBIMY - interpolacja string
+// ❌ DO NOT DO THIS - string interpolation
 // var sql = $"SELECT * FROM Tickets WHERE Status = '{status}'";
 ```
 
@@ -828,7 +828,7 @@ var tickets = await _context.Tickets
 Vue.js automatycznie escapuje:
 
 ```vue
-<!-- ✅ Bezpieczne - Vue escapuje -->
+<!-- ✅ Safe - Vue escapes it -->
 <div>{{ ticket.description }}</div>
 
 <!-- ❌ Niebezpieczne - raw HTML -->
@@ -889,7 +889,7 @@ dotnet HelpDeskAPI.dll
 cd frontend
 npm run build
 
-# Wygenerowane pliki w: frontend/dist/
+# Generated files in: frontend/dist/
 ```
 
 **Nginx config:**
@@ -1024,13 +1024,13 @@ CMD ["nginx", "-g", "daemon off;"]
 **Rozwiązanie:**
 
 ```bash
-# Zainstaluj dotnet-ef
+# Install dotnet-ef
 dotnet tool install --global dotnet-ef
 
-# Sprawdź czy działa
+# Check that it works
 dotnet ef --version
 
-# Utwórz migrację od nowa
+# Recreate the migration
 dotnet ef migrations add InitialCreate --force
 
 # Aplikuj
@@ -1077,7 +1077,7 @@ dotnet ef database update
 1. Sprawdź czy seeder został uruchomiony:
 
    ```csharp
-   // W Program.cs powinno być:
+   // Program.cs should contain:
    using (var scope = app.Services.CreateScope())
    {
        var context = scope.ServiceProvider.GetRequiredService<HelpDeskContext>();
@@ -1096,12 +1096,12 @@ dotnet ef database update
 **Rozwiązanie:**
 
 ```bash
-# Usuń node_modules i cache
+# Remove node_modules and the cache
 rm -rf node_modules package-lock.json
 npm cache clean --force
 npm install
 
-# Sprawdź tsconfig.json
+# Check tsconfig.json
 npx tsc --noEmit
 ```
 

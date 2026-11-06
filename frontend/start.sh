@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! command -v node &> /dev/null; then
-    echo "Node.js nie jest zainstalowany!"
+    echo "Node.js is not installed!"
     exit 1
 fi
 

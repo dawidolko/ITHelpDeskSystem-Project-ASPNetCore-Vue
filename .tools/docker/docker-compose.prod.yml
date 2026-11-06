@@ -1,16 +1,17 @@
-# IT Help Desk — stack produkcyjny (ithelpdesk.dawidolko.pl).
+# IT Help Desk - production stack (ithelpdesk.dawidolko.pl).
 #
-# Rozni sie od `docker-compose.yml` czterema rzeczami:
+# Differs from `docker-compose.yml` in four ways:
 #
-#  1. Publikowany jest tylko front, i to wylacznie na loopback oraz bridge
-#     Dockera. Backend i baza zostaja wewnatrz sieci — z internetu nie da sie
-#     do nich dostac inaczej niz przez /api na froncie.
-#  2. Front budowany jest z WZGLEDNYM adresem API (`/api`), wiec przegladarka
-#     uderza w te sama domene. Bez tego w zbudowanym pliku wyladowalby
-#     `http://localhost:5001` i aplikacja dzialalaby tylko na maszynie autora.
-#  3. Baza ma przyciete zuzycie pamieci — serwer dzieli 3,7 GB RAM miedzy
-#     wszystkie aplikacje.
-#  4. Sekrety pochodza z `.env`, nie z wartosci domyslnych w pliku.
+#  1. Only the frontend is published, and only on loopback and the Docker
+#     bridge. The backend and the database stay inside the network - from the
+#     internet they can only be reached through /api on the frontend.
+#  2. The frontend is built with a RELATIVE API address (`/api`), so the browser
+#     hits the same domain. Otherwise the built bundle would contain
+#     `http://localhost:5001` and the app would only work on the author's
+#     machine.
+#  3. The database has reduced memory usage - the server shares 3.7 GB of RAM
+#     among all applications.
+#  4. Secrets come from `.env`, not from default values in the file.
 name: ithelpdesk-project
 
 services:
@@ -25,10 +26,10 @@ services:
       --innodb-log-buffer-size=8M
       --key-buffer-size=8M
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?ustaw MYSQL_ROOT_PASSWORD w .tools/docker/.env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .tools/docker/.env}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-helpdesk_db}
       MYSQL_USER: ${MYSQL_USER:-helpdesk_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?ustaw MYSQL_PASSWORD w .tools/docker/.env}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .tools/docker/.env}
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -53,12 +54,12 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:5000
-      # Serwer ma dwa rdzenie — bez tego .NET rezerwuje sterty pod wieksza
-      # rownoleglosc, niz ta maszyna ma do zaoferowania.
+      # The server has two cores - without this, .NET reserves heaps for more
+      # parallelism than this machine can offer.
       DOTNET_gcServer: "0"
       DOTNET_GCHeapCount: "1"
       ConnectionStrings__DefaultConnection: Server=mysql;Database=${MYSQL_DATABASE:-helpdesk_db};User=${MYSQL_USER:-helpdesk_user};Password=${MYSQL_PASSWORD};Port=3306;
-      Jwt__Key: ${JWT_KEY:?ustaw JWT_KEY w .tools/docker/.env}
+      Jwt__Key: ${JWT_KEY:?set JWT_KEY in .tools/docker/.env}
       Jwt__Issuer: ${JWT_ISSUER:-ITHelpDeskAPI}
       Jwt__Audience: ${JWT_AUDIENCE:-ITHelpDeskClient}
     depends_on:
@@ -76,7 +77,7 @@ services:
       context: ../../
       dockerfile: .tools/docker/Dockerfile.frontend
       args:
-        # Wzgledny adres — front i API stoja pod ta sama domena.
+        # Relative address - the frontend and the API sit on the same domain.
         VITE_API_URL: /api
     container_name: ithelpdesk-frontend
     restart: unless-stopped
