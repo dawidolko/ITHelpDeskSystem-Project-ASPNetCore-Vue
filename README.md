@@ -602,6 +602,12 @@ Feel free to open issues or reach out through GitHub for any questions or sugges
 
 ---
 
+## ♿ Accessibility
+
+An accessibility panel in the corner of every page changes text size, contrast, font and motion, and remembers the choice on the device. It sits on top of the markup and does not replace accessible markup.
+
+---
+
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
